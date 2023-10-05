@@ -1,0 +1,9 @@
+# インストールされているバージョンによって
+runtime: python38
+
+entrypoint: gunicorn --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind :$PORT main:app
+
+#デプロイした後にアクセスできるようにします。
+handlers:
+  - url: .*
+    script: auto
