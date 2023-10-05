@@ -8,5 +8,5 @@ pydantic==1.9.1
 python-dotenv==0.21.0
 python-multipart==0.0.5
 psycopg2-binary==2.9.6
-uvicorn==0.20.0
+uvicorn[standard]==0.20.0
 sqlalchemy==1.4.45

@@ -82,3 +82,8 @@ sudo systemctl restart dnsmasq.service
 ```
 sudo systemctl start nginx
 ```
+
+# Google App Engineデプロイ
+```
+gcloud app deploy
+```
