@@ -87,3 +87,8 @@ sudo systemctl start nginx
 ```
 gcloud app deploy
 ```
+
+# Google App Engine設定
+```
+gcloud compute backend-services update <backend service name> --timeout=<expected duration>
+```

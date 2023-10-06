@@ -1,12 +1,14 @@
-from fastapi import APIRouter, WebSocketDisconnect
+from fastapi import APIRouter, WebSocketDisconnect,Cookie, Depends, Header,Query,  status
 from fastapi.responses import JSONResponse
 from starlette.requests import Request
 from starlette.websockets import WebSocket
 
+from typing import Optional,Dict
+
 router = APIRouter()
 
 # 接続中のクライアントを識別するためのIDを格納
-clients = {}
+clients:Dict[str, WebSocket] = {}
 
 @router.get('/')
 async def test_post(
@@ -19,10 +21,34 @@ async def test_post(
         }
     )
 
+async def get_cookie_or_client(
+    websocket: WebSocket,
+    session: str = Cookie(None),
+    x_client: str = Header(None)
+):
+    print(session)
+    if session is None and x_client is None:
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+    return session or x_client
+
+async def get_cookie_or_token(
+    session: Optional[str] = Cookie(None),
+    token: Optional[str] = Query(None),
+):
+    if session is None and not token:
+        return None
+
+    return session or token
+
 # WebSockets用のエンドポイント
 @router.websocket("/ws")
-async def websocket_endpoint(ws: WebSocket):
+async def websocket_endpoint(
+    ws: WebSocket,
+    #cookie_or_client: str = Depends(get_cookie_or_client),
+    #cookie_or_token: str = Depends(get_cookie_or_token),
+):
     await ws.accept()
+
     # クライアントを識別するためのIDを取得
     key = ws.headers.get('sec-websocket-key')
     clients[key] = ws
@@ -34,6 +60,6 @@ async def websocket_endpoint(ws: WebSocket):
             for client in clients.values():
                 await client.send_text(f"ID: {key} | Message: {data}")
     except WebSocketDisconnect:
-        await ws.close()
+        #await ws.close()
         # 接続が切れた場合、当該クライアントを削除する
         del clients[key]
