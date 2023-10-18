@@ -2,6 +2,7 @@ from fastapi import APIRouter, WebSocketDisconnect,Cookie, Depends, Header,Query
 from fastapi.responses import JSONResponse
 from starlette.requests import Request
 from starlette.websockets import WebSocket
+import websockets
 
 from typing import Optional,Dict
 
@@ -41,11 +42,9 @@ async def get_cookie_or_token(
     return session or token
 
 # WebSockets用のエンドポイント
-@router.websocket("/ws")
+@router.websocket("/ws/send")
 async def websocket_endpoint(
-    ws: WebSocket,
-    #cookie_or_client: str = Depends(get_cookie_or_client),
-    #cookie_or_token: str = Depends(get_cookie_or_token),
+    ws: WebSocket
 ):
     await ws.accept()
 
@@ -61,5 +60,25 @@ async def websocket_endpoint(
                 await client.send_text(f"ID: {key} | Message: {data}")
     except WebSocketDisconnect:
         #await ws.close()
+        # 接続が切れた場合、当該クライアントを削除する
+        del clients[key]
+
+# WebSockets用のエンドポイント
+@router.websocket("/ws/reception")
+async def websocket_endpoint(
+    ws: WebSocket
+):
+    await ws.accept()
+
+    # クライアントを識別するためのIDを取得
+    key = ws.headers.get('sec-websocket-key')
+    clients[key] = ws
+    try:
+        while True:
+            # 接続中のクライアントそれぞれにメッセージを送信（ブロードキャスト）
+            for client in clients.values():
+                await client.send_text(f"ID:{key} Message:")
+    except websockets.exceptions.ConnectionClosed:
+        await ws.close()
         # 接続が切れた場合、当該クライアントを削除する
         del clients[key]

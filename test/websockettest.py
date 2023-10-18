@@ -3,8 +3,8 @@ import websockets
 
 from http.client import IncompleteRead
 
-URI = "ws://fastsample-389906.an.r.appspot.com/ws"  # FastAPIサーバーのWebSocketエンドポイントのURIを指定します
-#URI = "ws://localhost:8080/ws"
+#URI = "ws://fastsample-389906.an.r.appspot.com/ws"  # FastAPIサーバーのWebSocketエンドポイントのURIを指定します
+URI = "ws://localhost:8080/ws/reception"
 
 async def connect_to_websocket():
     print("is this working?")
@@ -49,6 +49,6 @@ async def hello():
 
 if __name__ == "__main__":
     # 非同期イベントループを作成してWebSocketに接続
-    #asyncio.get_event_loop().run_until_complete(connect_to_websocket())
-    asyncio.get_event_loop().run_until_complete(websocket_client())
+    asyncio.get_event_loop().run_until_complete(connect_to_websocket())
+    #asyncio.get_event_loop().run_until_complete(websocket_client())
     #asyncio.run(hello())
