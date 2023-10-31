@@ -1,5 +1,13 @@
 # $ python todo.py でテーブル作成
-from sqlalchemy import Boolean, Column, Integer, String, create_engine
+from sqlalchemy import (
+    Boolean,
+    Column,
+    Integer,
+    String,
+    TIMESTAMP,
+    DECIMAL,
+    create_engine
+)
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -21,6 +29,15 @@ class Todo(Base):
     id = Column('id', Integer, primary_key = True)
     title = Column('title', String(200))
     done = Column('done', Boolean, default=False)
+
+class WaveTable(Base):
+    __tabename__ = 'wavetable'
+    time = Column('time', TIMESTAMP, primary_key = True)
+    sampling_freq = Column('sampling_freq', DECIMAL)
+    channel = Column('channel', Integer)
+    sample_width = Column('sample_width', Integer)
+    frame_rate = Column('frame_rate', Integer)
+    frame_count = Column('frame_count', Integer)
 
 # テーブル作成
 Base.metadata.create_all(bind=engine)
