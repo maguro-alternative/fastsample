@@ -6,6 +6,7 @@ from sqlalchemy import (
     String,
     TIMESTAMP,
     DECIMAL,
+    BOOLEAN,
     create_engine
 )
 from sqlalchemy.orm import Session, sessionmaker
@@ -15,7 +16,7 @@ from sqlalchemy.ext.declarative import declarative_base
 SQLALCHEMY_DATABASE_URI = "sqlite:///./test.db"
 # SQLALCHEMY_DATABASE_URI = "postgresql://user:password@postgresserver/db"
 
-engine = create_engine(
+ENGINE = create_engine(
     SQLALCHEMY_DATABASE_URI,
     connect_args={"check_same_thread": False},
     echo=True
@@ -39,8 +40,14 @@ class WaveTable(Base):
     frame_rate = Column('frame_rate', Integer)
     frame_count = Column('frame_count', Integer)
 
+class CSVTabel(Base):
+    __tablename__ = 'csvtable'
+    time = Column('time', TIMESTAMP, primary_key = True)
+    infrared = Column('infrared', Integer)
+    flag = Column('flag', Integer)
+
 # テーブル作成
-Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=ENGINE)
 
 # DB接続用のセッションクラス インスタンスが作成されると接続する
 # SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
