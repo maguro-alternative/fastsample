@@ -17,23 +17,16 @@ SQLALCHEMY_DATABASE_URI = "sqlite:///./test.db"
 # SQLALCHEMY_DATABASE_URI = "postgresql://user:password@postgresserver/db"
 
 ENGINE = create_engine(
-    SQLALCHEMY_DATABASE_URI,
+    url=SQLALCHEMY_DATABASE_URI,
     connect_args={"check_same_thread": False},
     echo=True
 )
 
 Base = declarative_base()
 
-# Todoテーブルの定義
-class Todo(Base):
-    __tablename__ = 'todos'
-    id = Column('id', Integer, primary_key = True)
-    title = Column('title', String(200))
-    done = Column('done', Boolean, default=False)
-
 class WaveTable(Base):
     __tabename__ = 'wavetable'
-    time = Column('time', TIMESTAMP, primary_key = True)
+    time = Column('time', TIMESTAMP)
     sampling_freq = Column('sampling_freq', DECIMAL)
     channel = Column('channel', Integer)
     sample_width = Column('sample_width', Integer)
@@ -42,7 +35,7 @@ class WaveTable(Base):
 
 class CSVTabel(Base):
     __tablename__ = 'csvtable'
-    time = Column('time', TIMESTAMP, primary_key = True)
+    time = Column('time', TIMESTAMP)
     infrared = Column('infrared', Integer)
     flag = Column('flag', Integer)
 
