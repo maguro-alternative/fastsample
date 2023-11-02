@@ -37,7 +37,7 @@ class WaveTable(Base):
     frame_rate = Column('frame_rate', Integer)
     frame_count = Column('frame_count', Float)
 
-def wav_read(filename:str):
+def wav_create_db(filename:str):
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=ENGINE)
     session = SessionLocal()
     time_pkey = datetime.now()
@@ -73,6 +73,28 @@ def wav_read(filename:str):
     print('パラメータ :', wf.getparams())
     print('長さ（秒） :', frames / sampling_rate)
     print('読み込み位置 :', wf.tell())
+    print('フレームのバイト数 :', wf.getsampwidth())
+    print('フレームレート :', wf.getframerate())
+    print('フレーム数 :', wf.getnframes())
+    print('チャンネル数 :', wf.getnchannels())
+    wf.close()
+
+def wav_read_db(before_time:datetime, after_time:datetime):
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=ENGINE)
+    session = SessionLocal()
+    wav_data = session.query(WaveTable).filter(
+        WaveTable.time.between(
+            before_time,
+            after_time
+        )
+    ).all()
+    for data in wav_data:
+        print(data.time)
+        print(data.sampling_freq)
+        print(data.channel)
+        print(data.sample_width)
+        print(data.frame_rate)
+        print(data.frame_count)
 
 def table_in():
     # テーブル作成
@@ -80,4 +102,5 @@ def table_in():
 
 if __name__ == '__main__':
     table_in()
-    wav_read(FileName)
+    #wav_create_db(FileName)
+    wav_read_db(datetime(2023, 11, 2, 10, 43, 52, 8), datetime(2023, 11, 2, 10, 43, 53, 8))
