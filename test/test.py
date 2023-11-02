@@ -11,6 +11,7 @@ from sqlalchemy import (
     TIMESTAMP,
     DECIMAL,
     BOOLEAN,
+    Float,
     create_engine
 )
 from sqlalchemy.orm import Session, sessionmaker
@@ -28,18 +29,18 @@ ENGINE = create_engine(
 )
 
 class WaveTable(Base):
-    __tablename__ = 'wavetable2'
+    __tablename__ = 'wavetable'
     time = Column('time', TIMESTAMP, primary_key=True)
     sampling_freq = Column('sampling_freq', DECIMAL)
     channel = Column('channel', Integer)
     sample_width = Column('sample_width', Integer)
     frame_rate = Column('frame_rate', Integer)
-    frame_count = Column('frame_count', Integer)
+    frame_count = Column('frame_count', Float)
 
 def wav_read(filename:str):
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=ENGINE)
     session = SessionLocal()
-    now = datetime.now()
+    time_pkey = datetime.now()
 
     wf = wave.open(filename, 'r')
     channels = wf.getnchannels()
@@ -49,14 +50,12 @@ def wav_read(filename:str):
     # wavファイルの音声データを読み込む
     y, sr = librosa.load(path=filename, sr=sampling_rate)
     time_rate = 1.0 / sr
-    time_key = 0.0
 
     for i,rate in enumerate(y):
         if i % sr == 0:
             pass
             #print(rate)
-        #time_key += time_rate
-        time_pkey = now + timedelta(microseconds=time_rate*1000000)
+        time_pkey += timedelta(microseconds=time_rate*1000000)
         session.add(WaveTable(
             time=time_pkey,
             sampling_freq=sr,
