@@ -42,7 +42,7 @@ async def async_wav_read(filename:str) -> ReadWaveFile:
     frames = wf.getnframes()
     # waveの実データを取得し、数値化
     data = wf.readframes(wf.getnframes())
-    wav_buffer16:np.ndarray[np.int16] = np.frombuffer(data, dtype=np.int16)
+    #wav_buffer16:np.ndarray[np.int16] = np.frombuffer(data, dtype=np.int16)
     # wavファイルの音声データを読み込む
     _, sr = librosa.load(path=filename, sr=sampling_rate)
     wf.close()
@@ -54,7 +54,7 @@ async def async_wav_read(filename:str) -> ReadWaveFile:
         "sample_width":width,
         "frames":frames,
         "create_time":create_time,
-        "wav_buffer16":wav_buffer16
+        "wav_buffer16":data
     })
     return read_wave_file
 

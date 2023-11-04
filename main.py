@@ -8,11 +8,15 @@ load_dotenv()
 from routers import (
     index
 )
+from routers.save_file.wav import wav_save
+from routers.download_file.wav import wav_download
+
 from routers.api import (
     test_success
 )
 
-from packages.db.database import ENGINE, DBBase
+from packages.db.database import ENGINE
+from model.wav import DBBase
 
 DBBase.metadata.create_all(bind=ENGINE)
 
@@ -29,6 +33,9 @@ app = FastAPI(
 # 各パス
 app.include_router(router=index.router)
 
+app.include_router(router=wav_save.router)
+app.include_router(router=wav_download.router)
+
 # フォーム送信テスト用
 app.include_router(router=test_success.router)
 
@@ -37,7 +44,7 @@ def local_run():
     # reloadでホットリロードを有効
     # "ファイル名:FastAPIのインスタンス名"で定義
     uvicorn.run(
-        app=app,
+        app="main:app",
         host='localhost',
         port=int(os.getenv("PORT", default=5000)),
         reload=True,
@@ -60,4 +67,4 @@ if __name__ == "__main__":
         local_run()
     # 本番環境として実行
     else:
-        run()
+        local_run()

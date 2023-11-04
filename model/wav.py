@@ -12,7 +12,7 @@ from sqlalchemy import (
 from pydantic import BaseModel
 from datetime import datetime
 
-from packages.db.database import DBBase
+from packages.db.database import Base as DBBase
 
 class WaveFileTable(DBBase):
     __tablename__ = 'wavefile'
@@ -41,7 +41,7 @@ class WaveFile(BaseModel):
 
 class Wave(BaseModel):
     time: datetime
-    frame_count: List[np.int16]
+    frame_count: List[bytes]
 
     class Config:
         orm_mode = True
@@ -53,4 +53,4 @@ class ReadWaveFile(BaseModel):
     sample_width: int
     frames: int
     create_time: datetime
-    wav_buffer16: np.ndarray[np.int16]
+    wav_buffer16: bytes

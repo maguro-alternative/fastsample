@@ -1,8 +1,10 @@
+from typing import List
 import wave
 import librosa
 import numpy as np
 from datetime import datetime, timedelta
 import struct
+import os
 
 from sqlalchemy import (
     Boolean,
@@ -33,7 +35,7 @@ ENGINE = create_engine(
 )
 
 class WaveTable(Base):
-    __tablename__ = 'wavetable2'
+    __tablename__ = 'wavetable'
     time = Column('time', TIMESTAMP, primary_key=True)
     sampling_freq = Column('sampling_freq', DECIMAL)
     channel = Column('channel', Integer)
@@ -45,7 +47,7 @@ class WaveTable(Base):
 def wav_create_db(filename:str):
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=ENGINE)
     session = SessionLocal()
-    time_pkey = datetime.now()
+    time_pkey = datetime.fromtimestamp(os.path.getatime(filename))
 
     wf = wave.open(filename, 'r')
     channels = wf.getnchannels()
@@ -88,7 +90,7 @@ def wav_create_db(filename:str):
 def wav_read_db(before_time:datetime, after_time:datetime):
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=ENGINE)
     session = SessionLocal()
-    wav_data = session.query(WaveTable).filter(
+    wav_data:List[WaveTable] = session.query(WaveTable).filter(
         WaveTable.time.between(
             before_time,
             after_time
@@ -122,26 +124,12 @@ def table_in():
     # テーブル作成
     Base.metadata.create_all(bind=ENGINE)
 
-def float2binary(data:np.float32, sampwidth:int) -> bytes:
-    data = (data*(2**(8*sampwidth-1)-1)).reshape(data.size, 1) # Normalize (float to int)
-    frames:bytes = b''
-    if sampwidth == 1:
-        data = data + 128
-        frames = data.astype(np.uint8).tobytes()
-    elif sampwidth == 2:
-        frames = data.astype(np.int16).tobytes()
-    elif sampwidth == 3:
-        a32 = np.asarray(data, dtype = np.int32)
-        a8 = (a32.reshape(a32.shape + (1,)) >> np.array([0, 8, 16])) & 255
-        frames = a8.astype(np.uint8).tobytes()
-    elif sampwidth == 4:
-        frames = data.astype(np.int32).tobytes()
-    return frames
-
-
 if __name__ == '__main__':
-    #table_in()
-    #wav_create_db(FileName)
+    start_time = datetime.fromtimestamp(os.path.getatime(FileName)) + timedelta(seconds=2)
+    stop_time = datetime.fromtimestamp(os.path.getatime(FileName)) + timedelta(seconds=4)
+    table_in()
+    wav_create_db(FileName)
     #wav_read_db(datetime(2023, 11, 2, 17, 59, 32, 154365), datetime(2023, 11, 2, 17, 59, 34, 154366))
-    wav_read_db(datetime(2023, 11, 2, 18, 14, 25, 989078), datetime(2023, 11, 2, 18, 14, 28, 989079))
+    #wav_read_db(datetime(2023, 11, 2, 18, 14, 26, 989078), datetime(2023, 11, 2, 18, 14, 28, 989079))
+    wav_read_db(start_time, stop_time)
     #wavreadtest()
