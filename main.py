@@ -1,5 +1,5 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI,Depends
 
 import os
 
@@ -12,6 +12,10 @@ from routers.api import (
     test_success
 )
 
+from packages.db.database import ENGINE, DBBase
+
+DBBase.metadata.create_all(bind=ENGINE)
+
 
 app = FastAPI(
     docs_url=None,
@@ -23,10 +27,10 @@ app = FastAPI(
 )
 
 # 各パス
-app.include_router(index.router)
+app.include_router(router=index.router)
 
 # フォーム送信テスト用
-app.include_router(test_success.router)
+app.include_router(router=test_success.router)
 
 # ローカル実行
 def local_run():

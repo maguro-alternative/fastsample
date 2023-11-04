@@ -2,9 +2,12 @@ from fastapi import APIRouter, WebSocketDisconnect,Cookie, Depends, Header,Query
 from fastapi.responses import JSONResponse
 from starlette.requests import Request
 from starlette.websockets import WebSocket
+from sqlalchemy.orm import Session
 import websockets
 
 from typing import Optional,Dict
+
+from packages.db.database import get_db
 
 router = APIRouter()
 
@@ -13,8 +16,10 @@ clients:Dict[str, WebSocket] = {}
 
 @router.get('/')
 async def test_post(
-    request:Request
+    request:Request,
+    db: Session = Depends(get_db)
 ):
+    db.execute('select * from test')
     return JSONResponse(
         status_code=200,
         content={

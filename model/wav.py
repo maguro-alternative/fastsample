@@ -8,13 +8,13 @@ from sqlalchemy import (
     DECIMAL,
     BINARY,
 )
-from sqlalchemy.ext.declarative import declarative_base
+
 from pydantic import BaseModel
 from datetime import datetime
 
-Base = declarative_base()
+from packages.db.database import DBBase
 
-class WaveFileTable(Base):
+class WaveFileTable(DBBase):
     __tablename__ = 'wavefile'
     filename = Column('filename', String(200), primary_key=True)
     sampling_freq = Column('sampling_freq', DECIMAL)
@@ -23,7 +23,7 @@ class WaveFileTable(Base):
     start_time = Column('start_time', TIMESTAMP)
     end_time = Column('end_time', TIMESTAMP)
 
-class WaveTable(Base):
+class WaveTable(DBBase):
     __tablename__ = 'wavetable'
     time = Column('time', TIMESTAMP, primary_key=True)
     frame_count = Column('frame_count', BINARY)

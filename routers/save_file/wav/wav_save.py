@@ -3,10 +3,21 @@ import shutil
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
-router = APIRouter()
+from packages.wav.wav_read import async_wav_read
+from model.wav import WaveFileTable,WaveTable
 
-# $ curl -X POST "http://127.0.0.1:8000/saveuploadfile/" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -F "token=agd" -F "fileb=@archive.zip;type=application/x-zip-compressed"
-@router.post("/saveuploadfile/")
+router = APIRouter()
+"""
+$ curl -X POST "http://127.0.0.1:8000/saveuploadfile/" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -F "token=agd" -F "fileb=@archive.zip;type=application/x-zip-compressed"
+
+$ curl -X POST
+    "http://127.0.0.1:8000/saveuploadfile/"
+    -H  "accept: application/json" -H
+    "Content-Type: multipart/form-data"
+    -F "token=agd"
+    -F "fileb=@archive.zip;type=application/x-zip-compressed"
+"""
+@router.post("/save-upload-file/wav/")
 async def save_upload_file_tmp(fileb: UploadFile=File(...), token:str=Form(...)):
     tmp_path:Path = ""
     try:
@@ -17,6 +28,8 @@ async def save_upload_file_tmp(fileb: UploadFile=File(...), token:str=Form(...))
             shutil.copyfileobj(fileb.file, tmp)
             tmp_path = Path(tmp.name)
             print(tmp_path)
+
+        wav_file = await async_wav_read(tmp_path)
     finally:
         fileb.file.close()
     return {
