@@ -51,5 +51,6 @@ class ReadWaveFile(BaseModel):
     sampling_freq: float
     channel: int
     sample_width: int
+    frames: int
     create_time: datetime
     wav_buffer16: np.ndarray[np.int16]

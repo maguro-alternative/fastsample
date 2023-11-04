@@ -16,21 +16,21 @@ def wav_read(filename:str) -> ReadWaveFile:
     channels = wf.getnchannels()
     width = wf.getsampwidth()
     sampling_rate = wf.getframerate()
+    frames = wf.getnframes()
     # waveの実データを取得し、数値化
     data = wf.readframes(wf.getnframes())
     wav_buffer16:np.ndarray[np.int16] = np.frombuffer(data, dtype=np.int16)
-    # wavファイルの音声データを読み込む
-    _, sr = librosa.load(path=filename, sr=sampling_rate)
     wf.close()
 
-    read_wave_file = ReadWaveFile(
-        filename=filename,
-        sampling_freq=sr,
-        channel=channels,
-        sample_width=width,
-        create_time=create_time,
-        wav_buffer16=wav_buffer16
-    )
+    read_wave_file = ReadWaveFile(**{
+        "filename":filename,
+        "sampling_freq":sampling_rate,
+        "channel":channels,
+        "sample_width":width,
+        "frames":frames,
+        "create_time":create_time,
+        "wav_buffer16":wav_buffer16
+    })
     return read_wave_file
 
 async def async_wav_read(filename:str) -> ReadWaveFile:
@@ -39,6 +39,7 @@ async def async_wav_read(filename:str) -> ReadWaveFile:
     channels = wf.getnchannels()
     width = wf.getsampwidth()
     sampling_rate = wf.getframerate()
+    frames = wf.getnframes()
     # waveの実データを取得し、数値化
     data = wf.readframes(wf.getnframes())
     wav_buffer16:np.ndarray[np.int16] = np.frombuffer(data, dtype=np.int16)
@@ -46,14 +47,15 @@ async def async_wav_read(filename:str) -> ReadWaveFile:
     _, sr = librosa.load(path=filename, sr=sampling_rate)
     wf.close()
 
-    read_wave_file = ReadWaveFile(
-        filename=filename,
-        sampling_freq=sr,
-        channel=channels,
-        sample_width=width,
-        create_time=create_time,
-        wav_buffer16=wav_buffer16
-    )
+    read_wave_file = ReadWaveFile(**{
+        "filename":filename,
+        "sampling_freq":sampling_rate,
+        "channel":channels,
+        "sample_width":width,
+        "frames":frames,
+        "create_time":create_time,
+        "wav_buffer16":wav_buffer16
+    })
     return read_wave_file
 
 def wave_create_bytes(
