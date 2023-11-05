@@ -14,6 +14,7 @@ if __name__ == "__main__":
 
     # ★ポイント2
     fileName = './fastsample/test/data/toujyo.wav'
+    fileName = './fastsample/test/data/audio_2/log_20230321_124636.wav'
     fileDataBinary = open(fileName, 'rb').read()
     files = {'fileb': (fileName, fileDataBinary, XLSX_MIMETYPE)}
 
