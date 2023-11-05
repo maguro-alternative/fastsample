@@ -13,14 +13,7 @@ from packages.db.database import get_db
 
 router = APIRouter()
 """
-$ curl -X POST "http://localhost:8000/saveuploadfile/wav/" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -F "token=agd" -F "fileb=@toujyo.wav;type=audio/wav"
-
-$ curl -X POST
-    "http://127.0.0.1:8000/saveuploadfile/"
-    -H  "accept: application/json" -H
-    "Content-Type: multipart/form-data"
-    -F "token=agd"
-    -F "fileb=@archive.zip;type=application/x-zip-compressed"
+http://localhost:5000/download-file/wav/?start_time=2023-11-04%2012:10:29&end_time=2023-11-04%2012:10:30
 """
 @router.get("/download-file/wav/")
 async def download_file_tmp(
