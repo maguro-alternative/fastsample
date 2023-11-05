@@ -2,6 +2,7 @@ from fastapi import APIRouter, File, UploadFile, Form, Depends
 from sqlalchemy.orm import Session
 import numpy as np
 
+import os
 import shutil
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -40,12 +41,16 @@ async def save_upload_file_tmp(
         print(type(fileb))# <class 'starlette.datastructures.UploadFile'>
         print(type(fileb.file)) #<class 'tempfile.SpooledTemporaryFile'>
         suffix = Path(fileb.filename).suffix
+        print(fileb.filename)
         with NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
             shutil.copyfileobj(fileb.file, tmp)
             tmp_path = Path(tmp.name)
             print(tmp_path)
 
-        wav_file = await async_wav_read(tmp_path.as_posix())
+        wav_file = await async_wav_read(
+            filepath=tmp_path.as_posix(),
+            filename=os.path.basename(fileb.filename)
+        )
 
         db.add(WaveFileTable(
             filename=wav_file.filename,

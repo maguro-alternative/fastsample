@@ -1,7 +1,5 @@
-from typing import List
-
 import wave
-import librosa
+import re
 import struct
 
 import numpy as np
@@ -33,9 +31,17 @@ def wav_read(filename:str) -> ReadWaveFile:
     })
     return read_wave_file
 
-async def async_wav_read(filename:str) -> ReadWaveFile:
-    create_time = datetime.fromtimestamp(creation_date(filename))
-    wf = wave.open(filename, 'r')
+async def async_wav_read(filepath:str,filename:str) -> ReadWaveFile:
+    filename = filename.replace("log_", "")
+    filename = filename.replace(".wav", "")
+    record_time = re.match(r'\d{8}_\d{6}', filename)
+    if record_time is None:
+        create_time = datetime.fromtimestamp(creation_date(filepath))
+    else:
+        create_time = datetime.strptime(record_time.group(), '%Y%m%d_%H%M%S')
+
+    print(create_time)
+    wf = wave.open(filepath, 'r')
     channels = wf.getnchannels()
     width = wf.getsampwidth()
     sampling_rate = wf.getframerate()
@@ -43,12 +49,10 @@ async def async_wav_read(filename:str) -> ReadWaveFile:
     # waveの実データを取得し、数値化
     data = wf.readframes(wf.getnframes())
     #wav_buffer16:np.ndarray[np.int16] = np.frombuffer(data, dtype=np.int16)
-    # wavファイルの音声データを読み込む
-    _, sr = librosa.load(path=filename, sr=sampling_rate)
     wf.close()
 
     read_wave_file = ReadWaveFile(**{
-        "filename":filename,
+        "filename":filepath,
         "sampling_freq":sampling_rate,
         "channel":channels,
         "sample_width":width,
