@@ -1,7 +1,6 @@
 runtime: python38
 instance_class: F2
-service: service-name
-entrypoint: gunicorn -w 1 -k uvicorn.workers.UvicornWorker package_name.module_name:app
+entrypoint: gunicorn -w 1 -k uvicorn.workers.UvicornWorker main:app
 
 env_variables:
   ENV_VAR_1: "XXXX"
