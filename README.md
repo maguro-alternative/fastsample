@@ -88,7 +88,7 @@ sudo systemctl start nginx
 gcloud app deploy
 ```
 
-# Google App Engine設定
+# Google App Engine設定(WebSocket使用時に必要、一度フレキシブル環境に変更する必要があり。**スタンダードには戻せないので注意**)
 ```
 gcloud compute backend-services update <backend service name> --timeout=<expected duration>
 ```
