@@ -6,14 +6,14 @@ from sqlalchemy import or_, and_
 from typing import List
 from datetime import datetime, timedelta
 
-from packages.csv.csv_read import csv_create
+from packages.csv.csv_read import async_csv_create
 from model.csv import CSVFileTable,CSVFile
 
 from packages.db.database import get_db
 
 router = APIRouter()
 """
-http://localhost:5000/download-file/wav/?start_time=2023-11-04%2012:10:29&end_time=2023-11-04%2012:10:30
+http://localhost:5000/download-file/csv/?start_time=2023-10-18%2012:00:00&end_time=2023-10-18%2012:00:10
 """
 @router.get("/download-file/csv/")
 async def download_file_tmp(
@@ -32,7 +32,7 @@ async def download_file_tmp(
         )
     ).all()
 
-    csv_create(csv_data, "csv_data.csv")
+    await async_csv_create(csv_data, "csv_data.csv")
 
     return FileResponse(
         path='./csv_data.csv',

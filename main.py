@@ -10,16 +10,19 @@ from routers import (
 )
 from routers.save_file.wav import wav_save
 from routers.download_file.wav import wav_download
+from routers.save_file.csv import csv_save
+from routers.download_file.csv import csv_download
 
 from routers.api import (
     test_success
 )
 
 from packages.db.database import ENGINE
-from model.wav import DBBase
+from model.wav import DBBase as DBBaseWav
+from model.csv import DBBase as DBBaseCSV
 
-DBBase.metadata.create_all(bind=ENGINE)
-
+DBBaseWav.metadata.create_all(bind=ENGINE)
+DBBaseCSV.metadata.create_all(bind=ENGINE)
 
 app = FastAPI(
     docs_url=None,
@@ -35,6 +38,8 @@ app.include_router(router=index.router)
 
 app.include_router(router=wav_save.router)
 app.include_router(router=wav_download.router)
+app.include_router(router=csv_save.router)
+app.include_router(router=csv_download.router)
 
 # フォーム送信テスト用
 app.include_router(router=test_success.router)

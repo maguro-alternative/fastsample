@@ -10,13 +10,13 @@ XLSX_MIMETYPE = 'audio/wav'
 # </form>
 
 # main
-if __name__ == "__main__":
 
+def wav_upload():
     # ★ポイント2
     fileName = './fastsample/test/data/toujyo.wav'
-    fileName = './fastsample/test/data/audio_2/log_20230321_124636.wav'
+    #fileName = './fastsample/test/data/audio_2/log_20230321_124636.wav'
     fileDataBinary = open(fileName, 'rb').read()
-    files = {'fileb': (fileName, fileDataBinary, XLSX_MIMETYPE)}
+    files = {'fileb': (fileName, fileDataBinary, 'audio/wav')}
 
     # ★ポイント3
     url = 'http://localhost:5000/save-upload-file/wav/'
@@ -24,3 +24,20 @@ if __name__ == "__main__":
 
     print(response.status_code)
     print(response.content)
+
+def csv_upload():
+    # ★ポイント2
+    fileName = './fastsample/test/data/data_20231018_12.csv'
+    fileDataBinary = open(fileName, 'rb').read()
+    files = {'fileb': (fileName, fileDataBinary, 'text/csv')}
+
+    # ★ポイント3
+    url = 'http://localhost:5000/save-upload-file/csv/'
+    response = requests.post(url=url, files=files, timeout=100)
+
+    print(response.status_code)
+    print(response.content)
+
+if __name__ == "__main__":
+    #wav_upload()
+    csv_upload()

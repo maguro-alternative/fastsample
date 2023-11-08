@@ -61,6 +61,8 @@ async def save_upload_file_tmp(
             end_time=wav_file.create_time + timedelta(microseconds=1.0/wav_file.sampling_freq*wav_file.frames*1000000)
         ))
 
+        print(wav_file.create_time)
+
         wav_buffer16:np.ndarray[np.int16] = np.frombuffer(wav_file.wav_buffer16, dtype=np.int16)
         for rate in wav_buffer16:
             wav_file.create_time += timedelta(microseconds=1.0/wav_file.sampling_freq*1000000)
