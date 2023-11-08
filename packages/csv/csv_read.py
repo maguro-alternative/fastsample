@@ -2,8 +2,10 @@ import re
 from typing import List
 from datetime import datetime
 
+import aiofiles
+
 from packages.file_time.creation_time import creation_date
-from model.csv import CSVFile
+from model.csv import CSVFileTable,CSVFile
 
 def csv_read(filepath:str,filename:str) -> List[CSVFile]:
     filename = filename.replace("data_", "")
@@ -54,3 +56,19 @@ async def async_csv_read(filepath:str,filename:str) -> List[CSVFile]:
         }))
 
     return csv_list
+
+def csv_create(csv_list:List[CSVFileTable],filename:str) -> None:
+    csv_data = ""
+    for csv in csv_list:
+        csv_data += f"{csv.time.strftime('%Y%m%d%H:%M:%S.%f')},{csv.raw_data},{csv.flag}\n"
+
+    with open(file=filename, mode='w') as f:
+        f.write(csv_data)
+
+async def async_csv_create(csv_list:List[CSVFileTable],filename:str) -> None:
+    csv_data = ""
+    for csv in csv_list:
+        csv_data += f"{csv.time.strftime('%Y%m%d%H:%M:%S.%f')},{csv.raw_data},{csv.flag}\n"
+
+    async with aiofiles.open(filename, mode='w') as f:
+        await f.write(csv_data)
