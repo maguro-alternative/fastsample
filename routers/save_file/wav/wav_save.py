@@ -8,7 +8,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from datetime import datetime, timedelta
 
-from packages.wav.wav_read import async_wav_read
+from controllers.wav.wav_read import async_wav_read
 from model.wav import WaveFileTable,WaveTable
 
 from packages.db.database import get_db

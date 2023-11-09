@@ -6,7 +6,7 @@ from sqlalchemy import or_, and_
 from typing import List
 from datetime import datetime, timedelta
 
-from packages.wav.wav_read import async_wave_create_bytes
+from controllers.wav.wav_read import async_wave_create_bytes
 from model.wav import WaveFileTable,WaveTable
 
 from packages.db.database import get_db

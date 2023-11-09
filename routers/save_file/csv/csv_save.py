@@ -6,7 +6,7 @@ import shutil
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
-from packages.csv.csv_read import async_csv_read
+from controllers.csv.csv_read import async_csv_read
 from model.csv import CSVFileTable
 
 from packages.db.database import get_db
