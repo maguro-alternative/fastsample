@@ -4,7 +4,12 @@ from sqlalchemy import (
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-SQLALCHEMY_DATABASE_URI = "sqlite:///./sqlite/test.db"
+from model.envconfig import EnvConfig
+
+env = EnvConfig()
+
+#SQLALCHEMY_DATABASE_URI = "sqlite:///./sqlite/test.db"
+SQLALCHEMY_DATABASE_URI = env.NODRIVER_DATABASE_URI
 
 ENGINE = create_engine(
     url=SQLALCHEMY_DATABASE_URI,
