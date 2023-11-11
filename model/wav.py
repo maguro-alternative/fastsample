@@ -7,6 +7,7 @@ from sqlalchemy import (
     DECIMAL,
     BINARY,
 )
+from sqlalchemy.dialects.postgresql import BYTEA
 
 from pydantic import BaseModel
 from datetime import datetime
@@ -25,7 +26,7 @@ class WaveFileTable(DBBase):
 class WaveTable(DBBase):
     __tablename__ = 'wavetable'
     time = Column('time', TIMESTAMP, primary_key=True)
-    frame_count = Column('frame_count', BINARY)
+    frame_count = Column('frame_count', BYTEA)
 
 class WaveFile(BaseModel):
     filename: str
