@@ -14,6 +14,7 @@ from packages.db.database import get_db
 router = APIRouter()
 """
 http://localhost:5000/download-file/wav/?start_time=2023-11-04%2012:10:29&end_time=2023-11-04%2012:10:30
+http://localhost:5000/download-file/wav/?start_time=2023-11-11%2016:14:11&end_time=2023-11-11%2016:14:13
 """
 @router.get("/download-file/wav/")
 async def download_file_tmp(
