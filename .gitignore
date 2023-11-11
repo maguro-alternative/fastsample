@@ -9,3 +9,5 @@ venv
 *.h264
 *.csv
 *.png
+
+secret.yaml
