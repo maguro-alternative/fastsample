@@ -77,6 +77,8 @@ async def save_upload_file_tmp(
     return {
         "filename": fileb.filename,
         "temporary_filepath": tmp_path,
+        "start_time": wav_file.create_time,
+        "end_time": wav_file.create_time + timedelta(microseconds=1.0/wav_file.sampling_freq*wav_file.frames*1000000),
         #"token": token,
         "fileb_content_type": fileb.content_type,
     }
