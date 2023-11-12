@@ -42,4 +42,15 @@ async def download_file_tmp(
         )
         file_list.append(f"./{pic_file.filename}")
 
+    if len(file_list) == 0:
+        return {
+            "message": "No file"
+        }
+    elif len(file_list) == 1:
+        return FileResponse(
+            path=file_list[0],
+            filename=file_list[0],
+            media_type='image/jpeg'
+        )
+
     return zipfiles(file_list, "pic_data.zip")
