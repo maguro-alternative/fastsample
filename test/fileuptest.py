@@ -13,8 +13,9 @@ XLSX_MIMETYPE = 'audio/wav'
 
 def wav_upload():
     # ★ポイント2
-    fileName = './fastsample/test/data/toujyo.wav'
+    #fileName = './fastsample/test/data/toujyo.wav'
     #fileName = './fastsample/test/data/audio_2/log_20230321_124636.wav'
+    fileName = './fastsample/test/data/audio_2/log_20231111_161411.wav'
     fileDataBinary = open(fileName, 'rb').read()
     files = {'fileb': (fileName, fileDataBinary, 'audio/wav')}
 
@@ -38,6 +39,35 @@ def csv_upload():
     print(response.status_code)
     print(response.content)
 
+def pic_upload():
+    # ★ポイント2
+    fileName = './fastsample/test/data/log_20231025_060000.jpg'
+    fileDataBinary = open(fileName, 'rb').read()
+    files = {'fileb': (fileName, fileDataBinary, 'image/jpeg')}
+
+    # ★ポイント3
+    url = 'http://localhost:5000/save-upload-file/pic/'
+    response = requests.post(url=url, files=files, timeout=100)
+
+    print(response.status_code)
+    print(response.content)
+
+def video_upload():
+    # ★ポイント2
+    fileName = './fastsample/test/data/log_20231023_110012.h264'
+    fileDataBinary = open(fileName, 'rb').read()
+    files = {'fileb': (fileName, fileDataBinary, 'video/h264')}
+
+    # ★ポイント3
+    url = 'http://localhost:5000/save-upload-file/video/'
+    response = requests.post(url=url, files=files, timeout=100)
+
+    print(response.status_code)
+    print(response.content)
+
+
 if __name__ == "__main__":
     #wav_upload()
-    csv_upload()
+    #csv_upload()
+    pic_upload()
+    #video_upload()
