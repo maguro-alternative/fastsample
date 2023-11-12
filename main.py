@@ -12,6 +12,10 @@ from routers.save_file.wav import wav_save
 from routers.download_file.wav import wav_download
 from routers.save_file.csv import csv_save
 from routers.download_file.csv import csv_download
+from routers.save_file.pic import pic_save
+from routers.download_file.pic import pic_download
+from routers.save_file.video import video_save
+from routers.download_file.video import video_download
 
 from routers.api import (
     test_success
@@ -40,6 +44,10 @@ app.include_router(router=wav_save.router)
 app.include_router(router=wav_download.router)
 app.include_router(router=csv_save.router)
 app.include_router(router=csv_download.router)
+app.include_router(router=pic_save.router)
+app.include_router(router=pic_download.router)
+app.include_router(router=video_save.router)
+app.include_router(router=video_download.router)
 
 # フォーム送信テスト用
 app.include_router(router=test_success.router)
