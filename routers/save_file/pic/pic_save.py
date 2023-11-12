@@ -1,6 +1,7 @@
 from fastapi import APIRouter, File, UploadFile, Form, Depends
 from sqlalchemy.orm import Session
 
+import os
 import re
 from datetime import datetime
 import shutil
@@ -25,18 +26,18 @@ async def save_upload_file_tmp(
     db: Session = Depends(get_db)
 ):
     tmp_path:Path = ""
-    gcs_path = fileb.filename
+    gcs_path = os.path.basename(fileb.filename)
     GCS = GCSWrapper(bucket_id=env.BUCKET_NAME)
     try:
         print(type(fileb))# <class 'starlette.datastructures.UploadFile'>
         print(type(fileb.file)) #<class 'tempfile.SpooledTemporaryFile'>
         suffix = Path(fileb.filename).suffix
         print(fileb.filename)
-        create_time_str = fileb.filename.replace("log_", "")
+        create_time_str = gcs_path.replace("log_", "")
         create_time_str = create_time_str.replace(".jpg", "")
-        record_time = re.match(r'\d{8}', create_time_str)
+        record_time = re.match(r'\d{8}_\d{6}', create_time_str)
         if record_time is None:
-            create_time = datetime.fromtimestamp(creation_date(create_time_str))
+            create_time = datetime.fromtimestamp(creation_date(gcs_path))
         else:
             create_time = datetime.strptime(record_time.group(), '%Y%m%d_%H%M%S')
         with NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
