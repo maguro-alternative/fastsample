@@ -1,16 +1,22 @@
 from fastapi import APIRouter, Depends
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
-from sqlalchemy import or_, and_
+from sqlalchemy import and_
 
 from typing import List
-from datetime import datetime, timedelta
+from datetime import datetime
 
-from controllers.pic.pic_storage import BUCKET
 from controllers.zip.zip_create import zipfiles
 from model.video import VideoFileTable
 
 from packages.db.database import get_db
+from packages.gcs.gcs import GCSWrapper
+
+from model.envconfig import EnvConfig
+
+from packages.db.database import get_db
+
+env = EnvConfig()
 
 router = APIRouter()
 
@@ -32,13 +38,12 @@ async def download_file_tmp(
     ).all()
 
     file_list = list()
+    GCS = GCSWrapper(bucket_id=env.BUCKET_NAME)
 
     for pic_file in pic_file_data:
-        blob = BUCKET.blob(
-            blob_name=pic_file.filename
-        )
-        blob.download_to_filename(
-            filename=f"./{pic_file.filename}"
+        GCS.download_file(
+            local_path=f"./{pic_file.filename}",
+            gcs_path=pic_file.filename
         )
         file_list.append(f"./{pic_file.filename}")
 

@@ -7,21 +7,26 @@ import shutil
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
-from controllers.pic.pic_storage import BUCKET
 from model.video import VideoFileTable
 
 from packages.file_time.creation_time import creation_date
 from packages.db.database import get_db
+from packages.gcs.gcs import GCSWrapper
+
+from model.envconfig import EnvConfig
+
+env = EnvConfig()
 
 router = APIRouter()
 
 @router.post("/save-upload-file/video/")
 async def save_upload_file_tmp(
     fileb: UploadFile=File(...),
-    #token:str=Form(...),
     db: Session = Depends(get_db)
 ):
     tmp_path:Path = ""
+    gcs_path = fileb.filename
+    GCS = GCSWrapper(bucket_id=env.BUCKET_NAME)
     try:
         print(type(fileb))# <class 'starlette.datastructures.UploadFile'>
         print(type(fileb.file)) #<class 'tempfile.SpooledTemporaryFile'>
@@ -39,24 +44,21 @@ async def save_upload_file_tmp(
             tmp_path = Path(tmp.name)
             print(tmp_path)
 
-        blob = BUCKET.blob(
-            blob_name=tmp_path.as_posix()
-        )
-        blob.upload_from_filename(
-            filename=tmp_path.as_posix()
+        GCS.upload_file(
+            local_path=tmp_path.as_posix(),
+            gcs_path=gcs_path
         )
 
         db.add(VideoFileTable(
-            filename=fileb.filename,
+            filename=gcs_path,
             create_time=create_time,
-            bucket_name=BUCKET.name
+            bucket_name=env.BUCKET_NAME
         ))
         db.commit()
     finally:
         fileb.file.close()
     return {
-        "filename": fileb.filename,
+        "filename": gcs_path,
         "temporary_filepath": tmp_path,
-        #"token": token,
         "fileb_content_type": fileb.content_type,
     }
