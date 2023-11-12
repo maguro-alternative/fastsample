@@ -24,9 +24,13 @@ from routers.api import (
 from packages.db.database import ENGINE
 from model.wav import DBBase as DBBaseWav
 from model.csv import DBBase as DBBaseCSV
+from model.pic import DBBase as DBBasePIC
+from model.video import DBBase as DBBaseVideo
 
 DBBaseWav.metadata.create_all(bind=ENGINE)
 DBBaseCSV.metadata.create_all(bind=ENGINE)
+DBBasePIC.metadata.create_all(bind=ENGINE)
+DBBaseVideo.metadata.create_all(bind=ENGINE)
 
 app = FastAPI(
     docs_url=None,
