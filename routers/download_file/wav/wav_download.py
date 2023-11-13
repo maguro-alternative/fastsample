@@ -46,11 +46,11 @@ async def download_file_tmp(
         sampling_freq=wav_file_data[0].sampling_freq,
         channel=wav_file_data[0].channel,
         sample_width=wav_file_data[0].sample_width,
-        out_file='./test.wav'
+        out_file='/tmp/test.wav'
     )
 
     return FileResponse(
-        path='./test.wav',
+        path='/tmp/test.wav',
         filename='test.wav',
         media_type='audio/wav'
     )

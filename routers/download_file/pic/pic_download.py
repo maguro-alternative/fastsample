@@ -42,10 +42,10 @@ async def download_file_tmp(
 
     for pic_file in pic_file_data:
         GCS.download_file(
-            local_path=f"./{pic_file.filename}",
+            local_path=f"/tmp/{pic_file.filename}",
             gcs_path=pic_file.filename
         )
-        file_list.append(f"./{pic_file.filename}")
+        file_list.append(f"/tmp/{pic_file.filename}")
 
     if len(file_list) == 0:
         return {
