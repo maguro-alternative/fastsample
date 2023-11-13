@@ -33,7 +33,7 @@ async def save_upload_file_tmp(
         print(type(fileb.file)) #<class 'tempfile.SpooledTemporaryFile'>
         suffix = Path(fileb.filename).suffix
         print(fileb.filename)
-        create_time_str = fileb.filename.replace("log_", "")
+        create_time_str = gcs_path.replace("log_", "")
         create_time_str = create_time_str.replace(".h264", "")
         record_time = re.match(r'\d{8}_\d{6}', create_time_str)
         if record_time is None:
