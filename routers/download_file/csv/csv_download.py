@@ -32,10 +32,10 @@ async def download_file_tmp(
         )
     ).all()
 
-    await async_csv_create(csv_data, "csv_data.csv")
+    await async_csv_create(csv_data, "/tmp/csv_data.csv")
 
     return FileResponse(
-        path='./csv_data.csv',
+        path='/tmp/csv_data.csv',
         filename='csv_data.csv',
         media_type='text/csv'
     )
