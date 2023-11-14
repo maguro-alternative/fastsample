@@ -1,3 +1,57 @@
+# API
+FastAPIで構築したAPIサーバー
+ファイルアップロードは以下のように実装すること
+<details>
+<summary>curlの場合</summary>
+
+```
+$ curl -X POST "http://localhost:5000/save-upload-file/wav/" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -F "fileb=@fastsample/test/data/toujyo.wav;type=audio/wav"
+```
+
+</details>
+<details>
+<summary>pythonのrequestsによるwavファイルアップロードの実装</summary>
+
+```python
+# -*- coding: utf-8 -*-
+import requests
+
+
+BASE_URL = "http://localhost:5000"
+
+def wav_upload():
+    fileName = '{ファイルパス}'
+    fileDataBinary = open(fileName, 'rb').read()
+    files = {'fileb': (fileName, fileDataBinary, 'audio/wav')}
+
+    url = f'{BASE_URL}/save-upload-file/wav/'
+    response = requests.post(url=url, files=files, timeout=100)
+
+    print(response.status_code)
+    print(response.content)
+
+if __name__ == "__main__":
+    wav_upload()
+```
+</details>
+
+ダウンロードの場合は以下のようなurlにgetリクエストを送ることでダウンロードできる
+```
+http://localhost:5000/download-file/pic/?start_time=2023-10-25%205:59:00&end_time=2023-10-25%206:01:00
+```
+この場合、2023-10-25 5:59:00から2023-10-25 6:01:00までの間の画像がダウンロードされる
+
+|パス|HTTPメゾット|概要|
+|---|---|---|
+|/|get|hello worldがjsonで返ってくる|
+|/save-upload-file/csv/|post|csvのアップロード|
+|/save-upload-file/wav/|post|wavのアップロード|
+|/save-upload-file/pic/|post|picのアップロード|
+|/save-upload-file/video/|post|h264のアップロード|
+|/download-file/csv/?start_time={time}&end_time={time}|get|指定された時刻間のデータが記録されたcsvがダウンロードされる|
+|/download-file/wav/?start_time={time}&end_time={time}|get|指定された時刻間の音声データがwavとしてダウンロードされる|
+|/download-file/pic/?start_time={time}&end_time={time}|get|指定された時刻間の画像がダウンロードされる|
+|/download-file/video/?start_time={time}&end_time={time}|get|指定された時刻間の動画がダウンロードされる|
 
 # wifi確認
 ```
