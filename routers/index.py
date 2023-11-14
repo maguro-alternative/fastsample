@@ -19,7 +19,7 @@ async def test_post(
     request:Request,
     db: Session = Depends(get_db)
 ):
-    db.execute('select * from test')
+    #db.execute('select * from test')
     return JSONResponse(
         status_code=200,
         content={
