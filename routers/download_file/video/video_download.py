@@ -21,7 +21,7 @@ env = EnvConfig()
 router = APIRouter()
 
 """
-http://localhost:5000/download-file/pic/?start_time=2023-10-23%2010:59:00&end_time=2023-10-25%2011:01:00
+http://localhost:5000/download-file/video/?start_time=2023-10-23%2010:59:00&end_time=2023-10-25%2011:01:00
 """
 @router.get("/download-file/video/")
 async def download_file_tmp(
