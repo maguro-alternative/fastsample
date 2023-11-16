@@ -13,6 +13,8 @@ SQLALCHEMY_DATABASE_URI = env.NODRIVER_DATABASE_URI
 
 ENGINE = create_engine(
     url=SQLALCHEMY_DATABASE_URI,
+    pool_pre_ping=True,
+    pool_recycle=300,
     #connect_args={"check_same_thread": False},
     echo=True
 )
