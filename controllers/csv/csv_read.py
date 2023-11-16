@@ -34,6 +34,7 @@ def csv_read(filepath:str,filename:str) -> List[CSVFile]:
 
 async def async_csv_read(filepath:str,filename:str) -> List[CSVFile]:
     filename = filename.replace("data_", "")
+    filename = filename.replace("log_", "")
     filename = filename.replace(".csv", "")
     record_time = re.match(r'\d{8}', filename)
     if record_time is None:
