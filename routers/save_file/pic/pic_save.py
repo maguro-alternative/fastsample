@@ -36,14 +36,15 @@ async def save_upload_file_tmp(
         create_time_str = gcs_path.replace("log_", "")
         create_time_str = create_time_str.replace(".jpg", "")
         record_time = re.match(r'\d{8}_\d{6}', create_time_str)
-        if record_time is None:
-            create_time = datetime.fromtimestamp(creation_date(gcs_path))
-        else:
-            create_time = datetime.strptime(record_time.group(), '%Y%m%d_%H%M%S')
         with NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
             shutil.copyfileobj(fileb.file, tmp)
             tmp_path = Path(tmp.name)
             print(tmp_path)
+
+        if record_time is None:
+            create_time = datetime.fromtimestamp(creation_date(tmp_path.as_posix()))
+        else:
+            create_time = datetime.strptime(record_time.group(), '%Y%m%d_%H%M%S')
 
         GCS.upload_file(
             local_path=tmp_path.as_posix(),
