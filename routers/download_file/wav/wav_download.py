@@ -6,10 +6,16 @@ from sqlalchemy import or_, and_
 from typing import List
 from datetime import datetime, timedelta
 
+from controllers.zip.zip_create import zipfiles
 from controllers.wav.wav_read import async_wave_create_bytes
 from model.wav import WaveFileTable,WaveTable
 
+from model.envconfig import EnvConfig
+
 from packages.db.database import get_db
+from packages.gcs.gcs import GCSWrapper
+
+env = EnvConfig()
 
 router = APIRouter()
 """
@@ -54,3 +60,42 @@ async def download_file_tmp(
         filename='test.wav',
         media_type='audio/wav'
     )
+
+@router.get("/download-file/wav-timestamp/")
+async def download_file_tmp(
+    start_time:str,
+    end_time:str,
+    db: Session = Depends(get_db)
+):
+    before_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
+    after_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S')
+    print(before_time, after_time)
+    wav_file_data:List[WaveFileTable] = db.query(WaveFileTable).filter(
+        or_(
+            and_(WaveFileTable.start_time <= before_time, before_time <= WaveFileTable.end_time),
+            and_(WaveFileTable.start_time <= after_time, after_time <= WaveFileTable.end_time)
+        )
+    ).all()
+
+    file_list = list()
+    GCS = GCSWrapper(bucket_id=env.BUCKET_NAME)
+
+    for wav_file in wav_file_data:
+        GCS.download_file(
+            local_path=f"/tmp/{wav_file.filename}",
+            gcs_path=wav_file.filename
+        )
+        file_list.append(f"/tmp/{wav_file.filename}")
+
+    if len(file_list) == 0:
+        return {
+            "message": "No file"
+        }
+    elif len(file_list) == 1:
+        return FileResponse(
+            path=file_list[0],
+            filename=file_list[0],
+            media_type='audio/wav'
+        )
+
+    return zipfiles(file_list, "pic_data.zip")
