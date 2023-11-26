@@ -11,6 +11,9 @@ XLSX_MIMETYPE = 'audio/wav'
 
 # main
 
+BASE_URL = "http://localhost:5000"
+BASE_URL = "https://glowing-vehicle-316505.an.r.appspot.com/"
+
 def wav_upload():
     # ★ポイント2
     #fileName = './fastsample/test/data/toujyo.wav'
@@ -20,7 +23,7 @@ def wav_upload():
     files = {'fileb': (fileName, fileDataBinary, 'audio/wav')}
 
     # ★ポイント3
-    url = 'http://localhost:5000/save-upload-file/wav/'
+    url = f'{BASE_URL}/save-upload-file/wav/'
     response = requests.post(url=url, files=files, timeout=100)
 
     print(response.status_code)
@@ -33,7 +36,7 @@ def csv_upload():
     files = {'fileb': (fileName, fileDataBinary, 'text/csv')}
 
     # ★ポイント3
-    url = 'http://localhost:5000/save-upload-file/csv/'
+    url = f'{BASE_URL}/save-upload-file/csv/'
     response = requests.post(url=url, files=files, timeout=100)
 
     print(response.status_code)
@@ -46,7 +49,7 @@ def pic_upload():
     files = {'fileb': (fileName, fileDataBinary, 'image/jpeg')}
 
     # ★ポイント3
-    url = 'http://localhost:5000/save-upload-file/pic/'
+    url = f'{BASE_URL}/save-upload-file/pic/'
     response = requests.post(url=url, files=files, timeout=100)
 
     print(response.status_code)
@@ -59,7 +62,7 @@ def video_upload():
     files = {'fileb': (fileName, fileDataBinary, 'video/h264')}
 
     # ★ポイント3
-    url = 'http://localhost:5000/save-upload-file/video/'
+    url = f'{BASE_URL}/save-upload-file/video/'
     response = requests.post(url=url, files=files, timeout=100)
 
     print(response.status_code)
@@ -67,7 +70,7 @@ def video_upload():
 
 
 if __name__ == "__main__":
-    #wav_upload()
+    wav_upload()
     #csv_upload()
-    pic_upload()
+    #pic_upload()
     #video_upload()
