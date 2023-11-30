@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
+from pathlib import Path
 from typing import List
 from datetime import datetime
 
@@ -37,28 +38,31 @@ async def download_file_tmp(
         )
     ).all()
 
-    file_list = list()
+    file_path_list = list()
+    file_name_list = list()
     GCS = GCSWrapper(bucket_id=env.BUCKET_NAME)
 
     for csv_file in csv_file_data:
+        suffix = Path(csv_file.filename).suffix
         GCS.download_file(
-            local_path=f"/tmp/{csv_file.filename}",
+            local_path=suffix,
             gcs_path=csv_file.filename
         )
-        file_list.append(f"/tmp/{csv_file.filename}")
+        file_path_list.append(suffix)
+        file_name_list.append(csv_file.filename)
 
-    if len(file_list) == 0:
+    if len(file_path_list) == 0:
         return {
             "message": "No file"
         }
-    elif len(file_list) == 1:
+    elif len(file_path_list) == 1:
         return FileResponse(
-            path=file_list[0],
-            filename=file_list[0],
+            path=file_path_list[0],
+            filename=file_name_list[0],
             media_type='text/csv'
         )
     else:
-        return zipfiles(file_list)
+        return zipfiles(file_path_list)
 
 
 @router.get("/download-file/csv-timestamp/")
