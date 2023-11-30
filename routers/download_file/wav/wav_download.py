@@ -31,45 +31,6 @@ async def download_file_tmp(
     before_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
     after_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S')
     print(before_time, after_time)
-    wav_data:List[WaveTable] = db.query(WaveTable).filter(
-        WaveTable.time.between(
-            before_time,
-            after_time
-        )
-    ).all()
-    wav_file_data:List[WaveFileTable] = db.query(WaveFileTable).filter(
-        or_(
-            and_(WaveFileTable.start_time <= before_time, before_time <= WaveFileTable.end_time),
-            and_(WaveFileTable.start_time <= after_time, after_time <= WaveFileTable.end_time)
-        )
-    ).all()
-    byte = b''
-    for data in wav_data:
-        byte += data.frame_count
-
-    await async_wave_create_bytes(
-        data=byte,
-        sampling_freq=wav_file_data[0].sampling_freq,
-        channel=wav_file_data[0].channel,
-        sample_width=wav_file_data[0].sample_width,
-        out_file='/tmp/test.wav'
-    )
-
-    return FileResponse(
-        path='/tmp/test.wav',
-        filename='test.wav',
-        media_type='audio/wav'
-    )
-
-@router.get("/download-file/wav-timestamp/")
-async def download_file_tmp(
-    start_time:str,
-    end_time:str,
-    db: Session = Depends(get_db)
-):
-    before_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
-    after_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S')
-    print(before_time, after_time)
     wav_file_data:List[WaveFileTable] = db.query(WaveFileTable).filter(
         or_(
             and_(WaveFileTable.start_time <= before_time, before_time <= WaveFileTable.end_time),
@@ -99,3 +60,42 @@ async def download_file_tmp(
         )
 
     return zipfiles(file_list, "pic_data.zip")
+
+@router.get("/download-file/wav-timestamp/")
+async def download_file_tmp(
+    start_time:str,
+    end_time:str,
+    db: Session = Depends(get_db)
+):
+    before_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
+    after_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S')
+    print(before_time, after_time)
+    wav_data:List[WaveTable] = db.query(WaveTable).filter(
+        WaveTable.time.between(
+            before_time,
+            after_time
+        )
+    ).all()
+    wav_file_data:List[WaveFileTable] = db.query(WaveFileTable).filter(
+        or_(
+            and_(WaveFileTable.start_time <= before_time, before_time <= WaveFileTable.end_time),
+            and_(WaveFileTable.start_time <= after_time, after_time <= WaveFileTable.end_time)
+        )
+    ).all()
+    byte = b''
+    for data in wav_data:
+        byte += data.frame_count
+
+    await async_wave_create_bytes(
+        data=byte,
+        sampling_freq=wav_file_data[0].sampling_freq,
+        channel=wav_file_data[0].channel,
+        sample_width=wav_file_data[0].sample_width,
+        out_file='/tmp/test.wav'
+    )
+
+    return FileResponse(
+        path='/tmp/test.wav',
+        filename='test.wav',
+        media_type='audio/wav'
+    )
