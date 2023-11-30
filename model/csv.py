@@ -25,6 +25,8 @@ class CSVTable(DBBase):
     raw_data = Column('raw_data', Integer)
     flag = Column('flag', Integer)
 
+
+
 class CSVFile(BaseModel):
     time: datetime
     raw_data: int
