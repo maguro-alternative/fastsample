@@ -3,6 +3,7 @@ from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, and_
 
+from pathlib import Path
 from typing import List
 from datetime import datetime
 
@@ -13,6 +14,7 @@ from packages.gcs.gcs import GCSWrapper
 from model.envconfig import EnvConfig
 
 from packages.db.database import get_db
+from packages.gcs.gcs import GCSWrapper
 
 env = EnvConfig()
 
@@ -37,25 +39,28 @@ async def download_file_tmp(
         )
     ).all()
 
-    file_list = list()
+    file_path_list = list()
+    file_name_list = list()
     GCS = GCSWrapper(bucket_id=env.BUCKET_NAME)
 
     for pic_file in pic_file_data:
+        suffix = Path(pic_file.filename).suffix
         GCS.download_file(
-            local_path=f"/tmp/{pic_file.filename}",
+            local_path=suffix,
             gcs_path=pic_file.filename
         )
-        file_list.append(f"/tmp/{pic_file.filename}")
+        file_path_list.append(suffix)
+        file_name_list.append(pic_file.filename)
 
-    if len(file_list) == 0:
+    if len(file_path_list) == 0:
         return {
             "message": "No file"
         }
-    elif len(file_list) == 1:
+    elif len(file_path_list) == 1:
         return FileResponse(
-            path=file_list[0],
-            filename=file_list[0],
+            path=file_path_list[0],
+            filename=file_name_list[0],
             media_type='image/jpeg'
         )
 
-    return zipfiles(file_list, "pic_data.zip")
+    return zipfiles(file_path_list, "pic_data.zip")
