@@ -10,6 +10,7 @@ from controllers.csv.csv_read import async_csv_read
 from model.csv import CSVFileTable, CSVTable
 
 from packages.db.database import get_db
+from packages.gcs.gcs import GCSWrapper
 
 from model.envconfig import EnvConfig
 
@@ -24,6 +25,8 @@ async def save_upload_file_tmp(
     db: Session = Depends(get_db)
 ):
     tmp_path:Path = ""
+    gcs_path = os.path.basename(fileb.filename)
+    GCS = GCSWrapper(bucket_id=env.BUCKET_NAME)
     try:
         print(type(fileb))# <class 'starlette.datastructures.UploadFile'>
         print(type(fileb.file)) #<class 'tempfile.SpooledTemporaryFile'>
@@ -34,15 +37,20 @@ async def save_upload_file_tmp(
             tmp_path = Path(tmp.name)
             print(tmp_path)
 
+        GCS.upload_file(
+            local_path=tmp_path.as_posix(),
+            gcs_path=gcs_path
+        )
+
         csv_list = await async_csv_read(
             filepath=tmp_path.as_posix(),
             filename=os.path.basename(fileb.filename)
         )
 
         db.add(CSVFileTable(
-            filename=fileb.filename,
-            bucket_name=env.BUCKET_NAME,
-            create_time=csv_list[0].time
+            filename=gcs_path,
+            create_time=csv_list[0].time,
+            bucket_name=env.BUCKET_NAME
         ))
 
         db.commit()

@@ -67,7 +67,7 @@ async def save_upload_file_tmp(
         )
 
         db.add(WaveFileTable(
-            filename=wav_file.filename,
+            filename=gcs_path,
             sampling_freq=wav_file.sampling_freq,
             channel=wav_file.channel,
             sample_width=wav_file.sample_width,
