@@ -3,11 +3,9 @@ from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, and_
 
-import shutil
 from pathlib import Path
-from tempfile import NamedTemporaryFile
 from typing import List
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from controllers.zip.zip_create import zipfiles
 from controllers.wav.wav_read import async_wave_create_bytes
@@ -34,6 +32,7 @@ async def download_file_tmp(
     before_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
     after_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S')
     print(before_time, after_time)
+    # 指定した時間のwavデータを取得
     wav_file_data:List[WaveFileTable] = db.query(WaveFileTable).filter(
         or_(
             and_(WaveFileTable.start_time <= before_time, before_time <= WaveFileTable.end_time),
@@ -43,9 +42,11 @@ async def download_file_tmp(
 
     file_path_list = list()
     file_name_list = list()
+    # GCSのインスタンスを作成
     GCS = GCSWrapper(bucket_id=env.BUCKET_NAME)
 
     for wav_file in wav_file_data:
+        # GCSからファイルをダウンロード
         suffix = Path(wav_file.filename).suffix
         GCS.download_file(
             local_path=suffix,
@@ -90,8 +91,10 @@ async def download_file_tmp(
     ).all()
     byte = b''
     for data in wav_data:
+        # バイトデータを結合
         byte += data.frame_count
 
+    # wavファイルを作成
     await async_wave_create_bytes(
         data=byte,
         sampling_freq=wav_file_data[0].sampling_freq,

@@ -29,13 +29,12 @@ async def save_upload_file_tmp(
     gcs_path = os.path.basename(fileb.filename)
     GCS = GCSWrapper(bucket_id=env.BUCKET_NAME)
     try:
-        print(type(fileb))# <class 'starlette.datastructures.UploadFile'>
-        print(type(fileb.file)) #<class 'tempfile.SpooledTemporaryFile'>
         suffix = Path(fileb.filename).suffix
-        print(fileb.filename)
+        # ファイル名から作成日時を取得
         create_time_str = gcs_path.replace("log_", "")
         create_time_str = create_time_str.replace(".h264", "")
         record_time = re.match(r'\d{8}_\d{6}', create_time_str)
+        # 時刻が取得できなかった場合はファイルの作成日時を取得
         if record_time is None:
             create_time = datetime.fromtimestamp(creation_date(gcs_path))
         else:

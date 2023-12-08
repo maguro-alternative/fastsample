@@ -12,7 +12,7 @@ XLSX_MIMETYPE = 'audio/wav'
 # main
 
 BASE_URL = "http://localhost:5000"
-BASE_URL = "https://glowing-vehicle-316505.an.r.appspot.com/"
+#BASE_URL = "https://glowing-vehicle-316505.an.r.appspot.com/"
 
 def wav_upload():
     # ★ポイント2
