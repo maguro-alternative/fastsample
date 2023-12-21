@@ -26,11 +26,13 @@ from model.wav import DBBase as DBBaseWav
 from model.csv import DBBase as DBBaseCSV
 from model.pic import DBBase as DBBasePIC
 from model.video import DBBase as DBBaseVideo
+from model.kamera import DBBase as DBBaseKamera
 
 DBBaseWav.metadata.create_all(bind=ENGINE)
 DBBaseCSV.metadata.create_all(bind=ENGINE)
 DBBasePIC.metadata.create_all(bind=ENGINE)
 DBBaseVideo.metadata.create_all(bind=ENGINE)
+DBBaseKamera.metadata.create_all(bind=ENGINE)
 
 app = FastAPI(
     docs_url=None,
