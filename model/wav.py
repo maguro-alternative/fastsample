@@ -22,11 +22,14 @@ class WaveFileTable(DBBase):
     sample_width = Column('sample_width', Integer)
     start_time = Column('start_time', TIMESTAMP)
     end_time = Column('end_time', TIMESTAMP)
+    bucket_name = Column('bucket_name', String(200))
+    kamera_id = Column('kamera_id', Integer)
 
 class WaveTable(DBBase):
     __tablename__ = 'wavetable'
     time = Column('time', TIMESTAMP, primary_key=True)
     frame_count = Column('frame_count', BYTEA)
+    kamera_id = Column('kamera_id', Integer)
 
 class WaveFile(BaseModel):
     filename: str
@@ -35,6 +38,8 @@ class WaveFile(BaseModel):
     sample_width: int
     start_time: datetime
     end_time: datetime
+    bucket_name: str
+    kamera_id: int
 
     class Config:
         orm_mode = True
@@ -42,6 +47,7 @@ class WaveFile(BaseModel):
 class Wave(BaseModel):
     time: datetime
     frame_count: List[bytes]
+    kamera_id: int
 
     class Config:
         orm_mode = True
