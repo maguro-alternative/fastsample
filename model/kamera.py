@@ -1,12 +1,8 @@
 from sqlalchemy import (
     Column,
     String,
-    TIMESTAMP,
     Integer
 )
-
-from pydantic import BaseModel
-from datetime import datetime
 
 from packages.db.database import Base as DBBase
 
