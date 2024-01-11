@@ -80,9 +80,12 @@ async def download_file_tmp(
     after_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S')
     print(before_time, after_time)
     wav_data:List[WaveTable] = db.query(WaveTable).filter(
-        WaveTable.time.between(
-            before_time,
-            after_time
+        and_(
+            WaveTable.time.between(
+                before_time,
+                after_time
+            ),
+            WaveTable.kamera_id == kamera_id
         )
     ).all()
     wav_file_data:List[WaveFileTable] = db.query(WaveFileTable).filter(
