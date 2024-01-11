@@ -20,11 +20,18 @@ def wav_upload():
     #fileName = './fastsample/test/data/audio_2/log_20230321_124636.wav'
     fileName = './fastsample/test/data/audio_2/log_20231111_161411.wav'
     fileDataBinary = open(fileName, 'rb').read()
-    files = {'fileb': (fileName, fileDataBinary, 'audio/wav')}
+    files = {
+        'fileb': (
+            fileName, fileDataBinary, 'audio/wav'
+        )
+    }
+    data = {
+        'address': '192.168.1.248'
+    }
 
     # ★ポイント3
     url = f'{BASE_URL}/save-upload-file/wav/'
-    response = requests.post(url=url, files=files, timeout=100)
+    response = requests.post(url=url, files=files, data=data, timeout=100)
 
     print(response.status_code)
     print(response.content)

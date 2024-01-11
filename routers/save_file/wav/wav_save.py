@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, UploadFile, Depends
+from fastapi import APIRouter, File, UploadFile, Depends, Body, Form
 from sqlalchemy.orm import Session
 import numpy as np
 
@@ -10,7 +10,7 @@ from datetime import timedelta
 
 from controllers.wav.wav_read import async_wav_read
 from model.wav import WaveFileTable,WaveTable
-from model.kamera import KameraTable
+from model.kamera import KameraTable, KameraAddress
 
 from packages.db.database import get_db
 from packages.gcs.gcs import GCSWrapper
@@ -39,9 +39,10 @@ $ curl -X POST
 @router.post("/save-upload-file/wav/")
 async def save_upload_file_tmp(
     fileb: UploadFile=File(...),
-    kamera_address: int = ...,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    address: str = Form(...)
 ):
+    print(address)
     tmp_path:Path = ""
     gcs_path = os.path.basename(fileb.filename)
     GCS = GCSWrapper(bucket_id=env.BUCKET_NAME)
@@ -65,7 +66,7 @@ async def save_upload_file_tmp(
         )
         # ipアドレスからカメラIDを取得
         kamera_id:int = db.query(KameraTable).filter(
-            KameraTable.address == kamera_address
+            KameraTable.address == address
         ).first().id
 
         db.add(WaveFileTable(
