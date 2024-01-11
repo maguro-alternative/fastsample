@@ -29,6 +29,7 @@ http://localhost:5000/download-file/video/?start_time=2023-10-23%2010:59:00&end_
 async def download_file_tmp(
     start_time:str,
     end_time:str,
+    kamera_id: int = ...,
     db: Session = Depends(get_db)
 ):
     before_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
@@ -37,7 +38,8 @@ async def download_file_tmp(
     video_file_data:List[VideoFileTable] = db.query(VideoFileTable).filter(
         and_(
             VideoFileTable.create_time >= before_time,
-            after_time >= VideoFileTable.create_time
+            after_time >= VideoFileTable.create_time,
+            VideoFileTable.kamera_id == kamera_id
         )
     ).all()
 

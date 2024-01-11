@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
+from sqlalchemy import or_, and_
 
 from pathlib import Path
 from typing import List
@@ -25,6 +26,7 @@ http://localhost:5000/download-file/csv/?start_time=2023-10-18%2012:00:00&end_ti
 async def download_file_tmp(
     start_time:str,
     end_time:str,
+    kamera_id: int = ...,
     db: Session = Depends(get_db)
 ):
     before_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
@@ -32,9 +34,12 @@ async def download_file_tmp(
     print(before_time, after_time)
 
     csv_file_data:List[CSVFileTable] = db.query(CSVFileTable).filter(
-        CSVFileTable.create_time.between(
-            before_time,
-            after_time
+        and_(
+            CSVFileTable.create_time.between(
+                before_time,
+                after_time
+            ),
+            CSVFileTable.kamera_id == kamera_id
         )
     ).all()
 
@@ -69,6 +74,7 @@ async def download_file_tmp(
 async def download_file_tmp(
     start_time:str,
     end_time:str,
+    kamera_id: int = ...,
     db: Session = Depends(get_db)
 ):
     before_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
@@ -76,9 +82,12 @@ async def download_file_tmp(
     print(before_time, after_time)
 
     csv_data:List[CSVTable] = db.query(CSVTable).filter(
-        CSVTable.time.between(
-            before_time,
-            after_time
+        and_(
+            CSVTable.time.between(
+                before_time,
+                after_time
+            ),
+            CSVTable.kamera_id == kamera_id
         )
     ).all()
 

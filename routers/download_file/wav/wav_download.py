@@ -27,6 +27,7 @@ http://localhost:5000/download-file/wav/?start_time=2023-11-11%2016:14:11&end_ti
 async def download_file_tmp(
     start_time:str,
     end_time:str,
+    kamera_id: int = ...,
     db: Session = Depends(get_db)
 ):
     before_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
@@ -35,8 +36,8 @@ async def download_file_tmp(
     # 指定した時間のwavデータを取得
     wav_file_data:List[WaveFileTable] = db.query(WaveFileTable).filter(
         or_(
-            and_(WaveFileTable.start_time <= before_time, before_time <= WaveFileTable.end_time),
-            and_(WaveFileTable.start_time <= after_time, after_time <= WaveFileTable.end_time)
+            and_(WaveFileTable.start_time <= before_time, before_time <= WaveFileTable.end_time, WaveFileTable.kamera_id == kamera_id),
+            and_(WaveFileTable.start_time <= after_time, after_time <= WaveFileTable.end_time, WaveFileTable.kamera_id == kamera_id),
         )
     ).all()
 
@@ -72,6 +73,7 @@ async def download_file_tmp(
 async def download_file_tmp(
     start_time:str,
     end_time:str,
+    kamera_id: int = ...,
     db: Session = Depends(get_db)
 ):
     before_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
@@ -85,8 +87,8 @@ async def download_file_tmp(
     ).all()
     wav_file_data:List[WaveFileTable] = db.query(WaveFileTable).filter(
         or_(
-            and_(WaveFileTable.start_time <= before_time, before_time <= WaveFileTable.end_time),
-            and_(WaveFileTable.start_time <= after_time, after_time <= WaveFileTable.end_time)
+            and_(WaveFileTable.start_time <= before_time, before_time <= WaveFileTable.end_time, WaveFileTable.kamera_id == kamera_id),
+            and_(WaveFileTable.start_time <= after_time, after_time <= WaveFileTable.end_time, WaveFileTable.kamera_id == kamera_id)
         )
     ).all()
     byte = b''

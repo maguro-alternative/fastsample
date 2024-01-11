@@ -27,6 +27,7 @@ http://localhost:5000/download-file/pic/?start_time=2023-10-25%205:59:00&end_tim
 async def download_file_tmp(
     start_time:str,
     end_time:str,
+    kamera_id: int = ...,
     db: Session = Depends(get_db)
 ):
     before_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
@@ -35,7 +36,8 @@ async def download_file_tmp(
     pic_file_data:List[PICFileTable] = db.query(PICFileTable).filter(
         and_(
             PICFileTable.create_time >= before_time,
-            after_time >= PICFileTable.create_time
+            after_time >= PICFileTable.create_time,
+            PICFileTable.kamera_id == kamera_id
         )
     ).all()
 
