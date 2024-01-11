@@ -138,7 +138,8 @@ async def save_upload_file_tmp(
             # wavファイルのデータをDBに保存
             db.add(WaveTable(
                 time=wav_file.create_time,
-                frame_count=rate
+                frame_count=rate,
+                kamera_id=kamera_id
             ))
 
         db.commit()

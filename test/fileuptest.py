@@ -30,7 +30,7 @@ def wav_upload():
     }
 
     # ★ポイント3
-    url = f'{BASE_URL}/save-upload-file/wav/'
+    url = f'{BASE_URL}/save-upload-file/wav-timestamp/'
     response = requests.post(url=url, files=files, data=data, timeout=100)
 
     print(response.status_code)
