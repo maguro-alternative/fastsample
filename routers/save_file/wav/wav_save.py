@@ -10,6 +10,7 @@ from datetime import timedelta
 
 from controllers.wav.wav_read import async_wav_read
 from model.wav import WaveFileTable,WaveTable
+from model.kamera import KameraTable
 
 from packages.db.database import get_db
 from packages.gcs.gcs import GCSWrapper
@@ -38,6 +39,7 @@ $ curl -X POST
 @router.post("/save-upload-file/wav/")
 async def save_upload_file_tmp(
     fileb: UploadFile=File(...),
+    kamera_address: int = ...,
     db: Session = Depends(get_db)
 ):
     tmp_path:Path = ""
@@ -61,6 +63,10 @@ async def save_upload_file_tmp(
             filepath=tmp_path.as_posix(),
             filename=os.path.basename(fileb.filename)
         )
+        # ipアドレスからカメラIDを取得
+        kamera_id:int = db.query(KameraTable).filter(
+            KameraTable.address == kamera_address
+        ).first().id
 
         db.add(WaveFileTable(
             filename=gcs_path,
@@ -68,7 +74,8 @@ async def save_upload_file_tmp(
             channel=wav_file.channel,
             sample_width=wav_file.sample_width,
             start_time=wav_file.create_time,
-            end_time=wav_file.create_time + timedelta(microseconds=1.0/wav_file.sampling_freq*wav_file.frames*1000000)
+            end_time=wav_file.create_time + timedelta(microseconds=1.0/wav_file.sampling_freq*wav_file.frames*1000000),
+            kamera_id=kamera_id
         ))
 
         print(wav_file.create_time)
@@ -87,6 +94,7 @@ async def save_upload_file_tmp(
 @router.post("/save-upload-file/wav-timestamp/")
 async def save_upload_file_tmp(
     fileb: UploadFile=File(...),
+    kamera_address: int = ...,
     db: Session = Depends(get_db)
 ):
     tmp_path:Path = ""
@@ -104,13 +112,19 @@ async def save_upload_file_tmp(
             filename=os.path.basename(fileb.filename)
         )
 
+        # ipアドレスからカメラIDを取得
+        kamera_id:int = db.query(KameraTable).filter(
+            KameraTable.address == kamera_address
+        ).first().id
+
         db.add(WaveFileTable(
             filename=wav_file.filename,
             sampling_freq=wav_file.sampling_freq,
             channel=wav_file.channel,
             sample_width=wav_file.sample_width,
             start_time=wav_file.create_time,
-            end_time=wav_file.create_time + timedelta(microseconds=1.0/wav_file.sampling_freq*wav_file.frames*1000000)
+            end_time=wav_file.create_time + timedelta(microseconds=1.0/wav_file.sampling_freq*wav_file.frames*1000000),
+            kamera_id=kamera_id
         ))
 
         print(wav_file.create_time)

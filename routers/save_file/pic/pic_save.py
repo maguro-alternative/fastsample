@@ -9,6 +9,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 from model.pic import PICFileTable
+from model.kamera import KameraTable
 
 from packages.file_time.creation_time import creation_date
 from packages.db.database import get_db
@@ -23,6 +24,7 @@ router = APIRouter()
 @router.post("/save-upload-file/pic/")
 async def save_upload_file_tmp(
     fileb: UploadFile=File(...),
+    kamera_address: int = ...,
     db: Session = Depends(get_db)
 ):
     tmp_path:Path = ""
@@ -51,11 +53,16 @@ async def save_upload_file_tmp(
             gcs_path=gcs_path
         )
 
+        kamera_id:int = db.query(KameraTable.id).filter(
+            KameraTable.address == kamera_address
+        ).first().id
+
         # csvファイルのデータをDBに保存
         db.add(PICFileTable(
             filename=gcs_path,
             create_time=create_time,
-            bucket_name=env.BUCKET_NAME
+            bucket_name=env.BUCKET_NAME,
+            kamera_id=kamera_id
         ))
         db.commit()
     finally:

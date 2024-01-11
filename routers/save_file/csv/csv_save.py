@@ -8,6 +8,7 @@ from tempfile import NamedTemporaryFile
 
 from controllers.csv.csv_read import async_csv_read
 from model.csv import CSVFileTable, CSVTable
+from model.kamera import KameraTable
 
 from packages.db.database import get_db
 from packages.gcs.gcs import GCSWrapper
@@ -21,6 +22,7 @@ router = APIRouter()
 @router.post("/save-upload-file/csv/")
 async def save_upload_file_tmp(
     fileb: UploadFile=File(...),
+    kamera_address: int = ...,
     db: Session = Depends(get_db)
 ):
     tmp_path:Path = ""
@@ -47,11 +49,16 @@ async def save_upload_file_tmp(
             filename=os.path.basename(fileb.filename)
         )
 
+        kamera_id:int = db.query(KameraTable.id).filter(
+            KameraTable.address == kamera_address
+        ).first().id
+
         # csvファイルのデータをDBに保存
         db.add(CSVFileTable(
             filename=gcs_path,
             create_time=csv_list[0].time,
-            bucket_name=env.BUCKET_NAME
+            bucket_name=env.BUCKET_NAME,
+            kamera_id=kamera_id
         ))
 
         db.commit()
@@ -66,6 +73,7 @@ async def save_upload_file_tmp(
 @router.post("/save-upload-file/csv-timestamp/")
 async def save_upload_file_tmp(
     fileb: UploadFile=File(...),
+    kamera_address: int = ...,
     db: Session = Depends(get_db)
 ):
     tmp_path:Path = ""
@@ -81,12 +89,17 @@ async def save_upload_file_tmp(
             filename=os.path.basename(fileb.filename)
         )
 
+        kamera_id:int = db.query(KameraTable.id).filter(
+            KameraTable.address == kamera_address
+        ).first().id
+
         for csv_data in csv_list:
             # csvファイルの中身を1行ずつDBに保存
             db.add(CSVTable(
                 time=csv_data.time,
                 raw_data=csv_data.raw_data,
-                flag=csv_data.flag
+                flag=csv_data.flag,
+                kamera_id=kamera_id
             ))
 
         db.commit()
