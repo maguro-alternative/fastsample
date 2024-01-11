@@ -24,7 +24,7 @@ router = APIRouter()
 @router.post("/save-upload-file/video/")
 async def save_upload_file_tmp(
     fileb: UploadFile=File(...),
-    kamera_address: int = ...,
+    address: str = Form(...),
     db: Session = Depends(get_db)
 ):
     tmp_path:Path = ""
@@ -52,7 +52,7 @@ async def save_upload_file_tmp(
         )
 
         kamera_id:int = db.query(KameraTable.id).filter(
-            KameraTable.address == kamera_address
+            KameraTable.address == address
         ).first().id
 
         # csvファイルのデータをDBに保存
