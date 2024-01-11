@@ -5,7 +5,7 @@ from sqlalchemy import (
 )
 
 from packages.db.database import Base as DBBase
-
+# DROP TABLE wavefile, wavetable, csvfile, csvtable, picfile, videofile;
 class KameraTable(DBBase):
     __tablename__ = 'kamera'
     id = Column('id', Integer, primary_key=True)

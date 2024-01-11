@@ -23,13 +23,13 @@ class WaveFileTable(DBBase):
     start_time = Column('start_time', TIMESTAMP)
     end_time = Column('end_time', TIMESTAMP)
     bucket_name = Column('bucket_name', String(200))
-    kamera_id = Column('kamera_id', Integer)
+    kamera_id = Column('kamera_id', Integer, primary_key=True)
 
 class WaveTable(DBBase):
     __tablename__ = 'wavetable'
     time = Column('time', TIMESTAMP, primary_key=True)
     frame_count = Column('frame_count', BYTEA)
-    kamera_id = Column('kamera_id', Integer)
+    kamera_id = Column('kamera_id', Integer, primary_key=True)
 
 class WaveFile(BaseModel):
     filename: str
