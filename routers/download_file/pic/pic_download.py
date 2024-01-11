@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Form
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, and_
@@ -27,7 +27,7 @@ http://localhost:5000/download-file/pic/?start_time=2023-10-25%205:59:00&end_tim
 async def download_file_tmp(
     start_time:str,
     end_time:str,
-    kamera_id: int = ...,
+    kamera_id: int = Form(...),
     db: Session = Depends(get_db)
 ):
     before_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
