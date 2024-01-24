@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import requests
+import sys
 
 # ★ポイント1
 XLSX_MIMETYPE = 'audio/wav'
@@ -13,6 +14,58 @@ XLSX_MIMETYPE = 'audio/wav'
 
 BASE_URL = "http://localhost:5000"
 #BASE_URL = "https://glowing-vehicle-316505.an.r.appspot.com/"
+
+"""
+INSERT INTO picfile (
+    filename,
+    create_time,
+    bucket_name,
+    kamera_id
+) VALUES (
+    'log_20231025_060000.jpg',
+    '2023-10-25 06:00:00',
+    'glowing-vehicle-316505.appspot.com',
+    1
+);
+
+INSERT INTO videofile (
+    filename,
+    create_time,
+    bucket_name,
+    kamera_id
+) VALUES (
+    'log_20231023_110012.h264',
+    '2023-10-23 11:00:12',
+    'glowing-vehicle-316505.appspot.com',
+    1
+);
+
+INSERT INTO wavefile (
+    filename,
+    create_time,
+    bucket_name,
+    kamera_id
+) VALUES (
+    'log_20231111_161411.wav',
+    '2023-11-11 16:14:11',
+    'glowing-vehicle-316505.appspot.com',
+    1
+);
+
+INSERT INTO csvfile (
+    filename,
+    create_time,
+    bucket_name,
+    kamera_id
+) VALUES (
+    'data_20231018_12.csv',
+    '2023-10-18 12:00:00',
+    'glowing-vehicle-316505.appspot.com',
+    1
+);
+
+
+"""
 
 def wav_upload():
     # ★ポイント2
@@ -75,9 +128,28 @@ def video_upload():
     print(response.status_code)
     print(response.content)
 
+def same_upload(filepath:str,url:str,minetype:str):
+    files = {'fileb': (filepath, open(filepath, 'rb').read(), minetype)}
+    response = requests.post(url=url, files=files, timeout=100)
+
+    print(response.status_code)
+    print(response.content)
+
 
 if __name__ == "__main__":
-    wav_upload()
+    args = sys.argv
+    print(200)
+    # python fileuptest.py [filepath] [minetype] [url]
+    # python fileuptest.py log_20231025_060000.jpg image/jpeg http://localhost:8000/save-upload-file/pic/
+    # python fileuptest.py log_20231023_110012.h264 video/h264 http://localhost:8000/save-upload-file/video/
+    # python fileuptest.py log_20231111_161411.wav audio/wav http://localhost:8000/save-upload-file/wav/
+    # python fileuptest.py data_20231018_12.csv text/csv http://localhost:8000/save-upload-file/csv/
+    print({
+        "filename":args[1],
+        "temporary_filepath":f"/tmp/{args[1]}",
+        "fileb_content_type":args[2]
+    })
+    #wav_upload()
     #csv_upload()
     #pic_upload()
     #video_upload()
