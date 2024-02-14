@@ -15,69 +15,6 @@ XLSX_MIMETYPE = 'audio/wav'
 BASE_URL = "http://localhost:5000"
 #BASE_URL = "https://glowing-vehicle-316505.an.r.appspot.com/"
 
-"""
-INSERT INTO picfile (
-    filename,
-    create_time,
-    bucket_name,
-    kamera_id
-) VALUES (
-    'log_20231025_060000.jpg',
-    '2023-10-25 06:00:00',
-    'glowing-vehicle-316505.appspot.com',
-    1
-);
-
-INSERT INTO videofile (
-    filename,
-    create_time,
-    bucket_name,
-    kamera_id
-) VALUES (
-    'log_20231023_110012.h264',
-    '2023-10-23 11:00:12',
-    'glowing-vehicle-316505.appspot.com',
-    1
-);
-
-INSERT INTO wavefile (
-    filename,
-    create_time,
-    bucket_name,
-    kamera_id
-) VALUES (
-    'log_20231111_161411.wav',
-    '2023-11-11 16:14:11',
-    'glowing-vehicle-316505.appspot.com',
-    1
-);
-
-INSERT INTO csvfile (
-    filename,
-    create_time,
-    bucket_name,
-    kamera_id
-) VALUES (
-    'data_20231018_12.csv',
-    '2023-10-18 12:00:00',
-    'glowing-vehicle-316505.appspot.com',
-    1
-);
-
-INSERT INTO csvtable (
-    time,
-    raw_data,
-    flag,
-    kamera_id
-) VALUES (
-    '2023-10-18 12:00:00',
-    131,
-    0,
-    1
-);
-
-"""
-
 def wav_upload():
     # ★ポイント2
     #fileName = './fastsample/test/data/toujyo.wav'
@@ -174,14 +111,6 @@ def video_upload():
 
     print(response.status_code)
     print(response.content)
-
-def same_upload(filepath:str,url:str,minetype:str):
-    files = {'fileb': (filepath, open(filepath, 'rb').read(), minetype)}
-    response = requests.post(url=url, files=files, timeout=100)
-
-    print(response.status_code)
-    print(response.content)
-    response.content
 
 
 if __name__ == "__main__":
