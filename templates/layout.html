@@ -9,8 +9,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
     </head>
     <body style="background-color: #36393F; color: #FFF;">
-        <!-- display: flex: 要素を並列に 
-             flex-direction: column:はみ出たコンテナを横に -->
+        <!-- display: flex: 要素を並列に
+            flex-direction: column:はみ出たコンテナを横に -->
         <div style="display: flex; flex-direction: column; min-height: 100vim;">
             <!--
                 container は各レスポンシブブレークポイントで max-width
@@ -35,15 +35,15 @@
                                 Login
                                 {% endif %}
                             </button>
-                        
+
                             <div id="popover-content" style="display: none;position: absolute;background-color: #fff;border: 1px solid #ccc;padding: 10px; margin: 0 0 0 auto;">
-                                
+
                                 {% if request.session.discord_oauth_data %}
                                     <a href="/discord-logout" class="btn btn-primary">Discord Logout</a>
                                 {% else %}
                                     <a href="/discord-login" class="btn btn-primary">Discord Login</a>
                                 {% endif %}
-                                
+
                             </div>
                         </div>
                     </div>

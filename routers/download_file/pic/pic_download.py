@@ -21,15 +21,26 @@ env = EnvConfig()
 router = APIRouter()
 
 """
-http://localhost:5000/download-file/pic/?start_time=2023-10-25%205:59:00&end_time=2023-10-25%206:01:00
+http://localhost:5000/download-file/pic/?start_time=2023-10-25%205:59:00&end_time=2023-10-25%206:01:00&kamera_id=1
 """
 @router.get("/download-file/pic/")
 async def download_file_tmp(
     start_time:str,
     end_time:str,
-    kamera_id: int = Form(...),
+    kamera_id:int,
     db: Session = Depends(get_db)
 ):
+    """
+    指定した時間の画像ファイルを取得する
+    Google Cloud Storageからファイルをダウンロードする
+
+    start_time: str
+        開始時間
+    end_time: str
+        終了時間
+    kamera_id: int
+        カメラID
+    """
     before_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
     after_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S')
     print(before_time, after_time)

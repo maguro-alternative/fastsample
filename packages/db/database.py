@@ -8,9 +8,11 @@ from model.envconfig import EnvConfig
 
 env = EnvConfig()
 
+# データベースのURI
 #SQLALCHEMY_DATABASE_URI = "sqlite:///./sqlite/test.db"
 SQLALCHEMY_DATABASE_URI = env.NODRIVER_DATABASE_URI
 
+# データベースのエンジン
 ENGINE = create_engine(
     url=SQLALCHEMY_DATABASE_URI,
     pool_pre_ping=True,
@@ -19,8 +21,10 @@ ENGINE = create_engine(
     echo=True
 )
 
+# セッションの作成
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=ENGINE)
 
+# ベースモデルの作成
 Base = declarative_base()
 
 # Dependency

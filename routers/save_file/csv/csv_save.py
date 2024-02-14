@@ -49,6 +49,7 @@ async def save_upload_file_tmp(
             filename=os.path.basename(fileb.filename)
         )
 
+        # カメラIDを取得
         kamera_id:int = db.query(KameraTable.id).filter(
             KameraTable.address == address
         ).first().id

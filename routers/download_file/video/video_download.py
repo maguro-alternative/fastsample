@@ -29,9 +29,20 @@ http://localhost:5000/download-file/video/?start_time=2023-10-23%2010:59:00&end_
 async def download_file_tmp(
     start_time:str,
     end_time:str,
-    kamera_id: int = Form(...),
+    kamera_id:int,
     db: Session = Depends(get_db)
 ):
+    """
+    指定した時間の動画ファイルを取得する
+    Google Cloud Storageからファイルをダウンロードする
+
+    start_time: str
+        開始時間
+    end_time: str
+        終了時間
+    kamera_id: int
+        カメラID
+    """
     before_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
     after_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S')
     print(before_time, after_time)

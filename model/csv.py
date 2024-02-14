@@ -13,6 +13,17 @@ from datetime import datetime
 
 from packages.db.database import Base as DBBase
 
+"""
+csvファイルのテーブル
+
+filename: varchar(200) PRIMARY KEY
+    ファイル名
+create_time: timestamp
+    ファイル作成時間
+bucket_name: varchar(200)
+    バケット名(Google Cloud Storage)
+"""
+
 class CSVFileTable(DBBase):
     __tablename__ = 'csvfile'
     filename = Column('filename', String(200), primary_key=True)

@@ -27,25 +27,6 @@ async def test_post(
         }
     )
 
-async def get_cookie_or_client(
-    websocket: WebSocket,
-    session: str = Cookie(None),
-    x_client: str = Header(None)
-):
-    print(session)
-    if session is None and x_client is None:
-        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
-    return session or x_client
-
-async def get_cookie_or_token(
-    session: Optional[str] = Cookie(None),
-    token: Optional[str] = Query(None),
-):
-    if session is None and not token:
-        return None
-
-    return session or token
-
 # WebSockets用のエンドポイント
 @router.websocket("/ws/send")
 async def websocket_endpoint(

@@ -43,19 +43,18 @@ http://localhost:5000/download-file/pic/?start_time=2023-10-25%205:59:00&end_tim
 
 |パス|HTTPメゾット|概要|
 |---|---|---|
-|/|get|hello worldがjsonで返ってくる|
 |/save-upload-file/csv-timestamp/|post|csvのアップロード  ファイルはGCSには保存されず、データベースに時系列データが格納される|
 |/save-upload-file/wav-timestamp/|post|wavのアップロード  ファイルはGCSには保存されず、データベースに時系列データが格納される|
 |/save-upload-file/csv/|post|csvのアップロード|
 |/save-upload-file/wav/|post|wavのアップロード|
 |/save-upload-file/pic/|post|picのアップロード|
 |/save-upload-file/video/|post|h264のアップロード|
-|/download-file/csv-timestamp/?start_time={time}&end_time={time}|get|指定された時刻間のcsvがダウンロードされる|
-|/download-file/wav-timestamp/?start_time={time}&end_time={time}|get|指定された時刻間のwavがダウンロードされる|
-|/download-file/csv/?start_time={time}&end_time={time}|get|指定された時刻間のデータが記録されたcsvがダウンロードされる|
-|/download-file/wav/?start_time={time}&end_time={time}|get|指定された時刻間の音声データがwavとしてダウンロードされる|
-|/download-file/pic/?start_time={time}&end_time={time}|get|指定された時刻間の画像がダウンロードされる|
-|/download-file/video/?start_time={time}&end_time={time}|get|指定された時刻間の動画がダウンロードされる|
+|/download-file/csv-timestamp/?start_time={time}&end_time={time}&kamera_id={id}|get|指定された時刻間のcsvがダウンロードされる|
+|/download-file/wav-timestamp/?start_time={time}&end_time={time}&kamera_id={id}|get|指定された時刻間のwavがダウンロードされる|
+|/download-file/csv/?start_time={time}&end_time={time}&kamera_id={id}|get|指定された時刻間のデータが記録されたcsvがダウンロードされる|
+|/download-file/wav/?start_time={time}&end_time={time}&kamera_id={id}|get|指定された時刻間の音声データがwavとしてダウンロードされる|
+|/download-file/pic/?start_time={time}&end_time={time}&kamera_id={id}|get|指定された時刻間の画像がダウンロードされる|
+|/download-file/video/?start_time={time}&end_time={time}&kamera_id={id}|get|指定された時刻間の動画がダウンロードされる|
 
 # wifi確認
 ```

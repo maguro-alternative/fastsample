@@ -27,9 +27,21 @@ http://localhost:5000/download-file/wav/?start_time=2023-11-11%2016:14:11&end_ti
 async def download_file_tmp(
     start_time:str,
     end_time:str,
-    kamera_id: int = Form(...),
+    kamera_id:int,
     db: Session = Depends(get_db)
 ):
+    """
+    指定した時間のwavファイルを取得する
+    Google Cloud Storageからファイルをダウンロードする
+
+    start_time: str
+        開始時間
+    end_time: str
+        終了時間
+    kamera_id: int
+        カメラID
+    """
+    # urlパラメータの時間をdatetime型に変換
     before_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
     after_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S')
     print(before_time, after_time)
@@ -46,6 +58,7 @@ async def download_file_tmp(
     # GCSのインスタンスを作成
     GCS = GCSWrapper(bucket_id=env.BUCKET_NAME)
 
+    # ファイルをダウンロード
     for wav_file in wav_file_data:
         # GCSからファイルをダウンロード
         suffix = Path(wav_file.filename).suffix
@@ -76,6 +89,17 @@ async def download_file_tmp(
     kamera_id: int = Form(...),
     db: Session = Depends(get_db)
 ):
+    """
+    指定した時間のwavファイルを取得する
+    データベースから直接取得する
+
+    start_time: str
+        開始時間
+    end_time: str
+        終了時間
+    kamera_id: int
+        カメラID
+    """
     before_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
     after_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S')
     print(before_time, after_time)

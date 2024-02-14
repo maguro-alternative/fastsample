@@ -27,6 +27,14 @@ async def save_upload_file_tmp(
     address: str = Form,
     db: Session = Depends(get_db)
 ):
+    """
+    画像ファイルをGCSにアップロードし、DBに保存する
+
+    fileb: UploadFile
+        アップロードされたファイル
+    address: str
+        カメラのipアドレス
+    """
     tmp_path:Path = ""
     gcs_path = os.path.basename(fileb.filename)
     GCS = GCSWrapper(bucket_id=env.BUCKET_NAME)
@@ -35,7 +43,9 @@ async def save_upload_file_tmp(
         # ファイル名から作成日時を取得
         create_time_str = gcs_path.replace("log_", "")
         create_time_str = create_time_str.replace(".jpg", "")
+        # 20211001_120000 の形式
         record_time = re.match(r'\d{8}_\d{6}', create_time_str)
+        # 一時ファイルを作成
         with NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
             shutil.copyfileobj(fileb.file, tmp)
             tmp_path = Path(tmp.name)
@@ -53,11 +63,12 @@ async def save_upload_file_tmp(
             gcs_path=gcs_path
         )
 
+        # ipアドレスからカメラのidを取得
         kamera_id:int = db.query(KameraTable.id).filter(
             KameraTable.address == address
         ).first().id
 
-        # csvファイルのデータをDBに保存
+        # 画像ファイルのデータをDBに保存
         db.add(PICFileTable(
             filename=gcs_path,
             create_time=create_time,

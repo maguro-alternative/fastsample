@@ -9,6 +9,18 @@ from model.wav import ReadWaveFile
 from packages.file_time.creation_time import creation_date
 
 def wav_read(filename:str) -> ReadWaveFile:
+    """
+    wavファイルを読み込む
+
+    filename: str
+        ファイル名
+
+    return
+    ------
+    read_wave_file: ReadWaveFile
+        wavファイルのデータ
+    """
+    # ファイルから記録時間を取得
     create_time = datetime.fromtimestamp(creation_date(filename))
     wf = wave.open(filename, 'r')
     channels = wf.getnchannels()
@@ -69,6 +81,20 @@ def wave_create_bytes(
     sample_width:int,
     out_file:str
 ) -> None:
+    """
+    wavファイルを作成する
+
+    data: bytes
+        wavデータ
+    channel: int
+        チャンネル数
+    sampling_freq: int
+        サンプリング周波数
+    sample_width: int
+        サンプル幅
+    out_file: str
+        出力ファイル名
+    """
     wav_buffer16:np.ndarray[np.int16] = np.frombuffer(data, dtype=np.int16)
     outd = struct.pack("h" * len(wav_buffer16), *wav_buffer16)
 

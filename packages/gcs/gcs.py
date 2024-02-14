@@ -7,7 +7,8 @@ from model.envconfig import EnvConfig
 
 env = EnvConfig()
 
-
+# GCSのラッパークラス
+# すべて同期処理だけど、非同期処理にも対応できるようにしておくべきかも
 class GCSWrapper:
     def __init__(self, bucket_id:str) -> None:
         """GCSのラッパークラス
