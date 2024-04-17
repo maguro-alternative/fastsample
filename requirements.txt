@@ -5,7 +5,7 @@ anyio==3.5.0
 fastapi==0.109.1
 gunicorn==22.0.0
 google-cloud-storage==2.13.0
-numpy==1.19.5
+numpy==1.22.0
 librosa==0.8.0
 pandas==1.4.0
 Pillow==10.3.0
